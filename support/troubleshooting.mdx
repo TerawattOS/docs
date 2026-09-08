@@ -1,5 +1,5 @@
 ---
-title: "Troubleshooting Common Terawattos Issues"
+title: "Troubleshooting TerawattEDGE and TerawattOS Common Issues"
 sidebarTitle: "Troubleshooting"
 description: "Step-by-step guidance for diagnosing and resolving common issues with TerawattEDGE connectivity, telemetry gaps, dashboard alerts, and the mobile app."
 ---
@@ -7,6 +7,15 @@ description: "Step-by-step guidance for diagnosing and resolving common issues w
 This guide covers the most common issues operators and field technicians encounter with TerawattEDGE connectivity, telemetry data quality, dashboard and alert behavior, and the Terawattos mobile app — with clear diagnostic steps and resolutions for each.
 
 ## TerawattEDGE Connectivity Issues
+
+<Accordion title="Understanding TerawattEDGE LED states">
+  The LED on your TerawattEDGE device gives you an instant status read without opening any dashboard:
+
+  - 🟢 **Solid green** — the device is online, communicating with the connected asset, and streaming telemetry to TerawattOS. No action required.
+  - 🟡 **Solid or flashing amber** — the device is running but either cannot reach the cloud (buffering data locally) or cannot communicate with the asset. See the sections below for diagnosis steps.
+  - 🔴 **Solid red** — a configuration error is preventing the device from communicating with the asset. No telemetry is being collected. See the red LED section below.
+  - ⚪ **No LED** — the device is not receiving power. Check the power cable and supply voltage at the installation point.
+</Accordion>
 
 <Accordion title="Device shows amber LED / appears offline in dashboard">
   An amber LED indicates that TerawattEDGE is running and collecting data, but is currently buffering telemetry locally rather than streaming to the cloud. The device has not lost data — it is storing up to 30 days of readings on-device.
@@ -132,7 +141,7 @@ If the steps in this guide haven't resolved your issue, contact the Terawattos s
 
 <CardGroup cols={1}>
   <Card
-    title="Contact Terawatt Support"
+    title="Contact Terawattos Support"
     icon="headset"
     href="https://terawattos.com/contact-sales"
   >

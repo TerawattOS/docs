@@ -1,5 +1,5 @@
 ---
-title: "SCADA and EMS Integration with Terawattos"
+title: "SCADA and EMS Integration for TerawattOS Deployments"
 sidebarTitle: "SCADA & EMS"
 description: "Integrate TerawattOS telemetry into your utility EMS, SCADA, or forecasting system using normalized DER data streams, REST API, and real-time webhooks."
 ---
@@ -14,7 +14,7 @@ The integration stack has two layers working together:
 
 **Platform layer — TerawattOS**: TerawattEDGE streams normalized telemetry to TerawattOS, where it is validated, stored, and made available through the REST API and webhook system. Your EMS, SCADA, or forecasting system connects to TerawattOS — not directly to the field devices — and receives a clean, consistent data schema regardless of how many OEMs or protocols exist in the field.
 
-```
+```text
 Energy Assets (SolarEdge, SMA, Huawei, custom)
         │  Modbus / SunSpec / DNP3 / IEC 61850
         ▼
