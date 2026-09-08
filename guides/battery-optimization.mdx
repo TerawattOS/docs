@@ -1,0 +1,108 @@
+---
+title: "Optimize Battery Dispatch and Storage with TerawattOS"
+sidebarTitle: "Battery Optimization"
+description: "Configure charge/discharge schedules, peak shaving, and time-of-use optimization in TerawattOS to maximize savings and protect battery cycle life."
+---
+
+TerawattOS gives you precise, automated control over how your battery storage systems charge and discharge. Whether you're reducing demand charges for a C&I facility, maximizing arbitrage revenue for an IPP, or protecting cycle life on a grid-scale BESS, the platform's dispatch engine handles the logic — you set the rules.
+
+## Battery Optimization Capabilities
+
+<CardGroup cols={2}>
+  <Card title="Charge/Discharge Scheduling" icon="clock">
+    Define time-based windows for charging (e.g., during off-peak tariff hours or peak solar generation) and discharging (e.g., during evening peak-rate periods). Set target state-of-charge values for each window.
+  </Card>
+  <Card title="Peak Shaving" icon="chart-line">
+    Set a demand threshold in kW. When grid demand approaches the threshold, TerawattEDGE automatically dispatches the battery to prevent the threshold from being breached — reducing peak demand charges on your utility bill.
+  </Card>
+  <Card title="Time-of-Use Optimization" icon="bolt">
+    Input your utility tariff schedule and TerawattOS automatically calculates the optimal charge and discharge timing to minimize your energy cost across each billing period.
+  </Card>
+  <Card title="Real-Time Override" icon="sliders">
+    Manually override the active dispatch mode or setpoint in real time from the TerawattOS dashboard or mobile app. TerawattEDGE executes the command at the asset within sub-second latency.
+  </Card>
+  <Card title="State of Charge Limits" icon="battery-half">
+    Set minimum and maximum SoC thresholds to protect battery cycle life. For example, never discharge below 20% and never charge above 90% — the dispatch engine enforces these limits regardless of the active optimization mode.
+  </Card>
+  <Card title="Audit Trail" icon="clipboard-list">
+    Every dispatch change is logged automatically — who made the change, when, and the before and after state of all affected parameters. Accessible from the asset's Dispatch History tab.
+  </Card>
+</CardGroup>
+
+## Configuring a Dispatch Schedule
+
+<Steps>
+  <Step title="Navigate to Dispatch Settings">
+    From the TerawattOS sidebar, go to **Assets**, select your battery asset from the list, and open the **Dispatch Settings** tab.
+  </Step>
+  <Step title="Select your optimization mode">
+    Choose from four dispatch modes:
+
+    <Tabs>
+      <Tab title="Schedule">
+        Time-based charge and discharge windows that repeat on a daily or weekly cycle. Best for predictable load profiles and fixed tariff structures.
+      </Tab>
+      <Tab title="Peak Shaving">
+        Threshold-based automatic dispatch triggered by real-time grid demand. Best for C&I customers with demand charge components in their utility tariff.
+      </Tab>
+      <Tab title="Time-of-Use (ToU)">
+        Tariff-aware automatic dispatch optimized for energy cost minimization. Best for sites on variable or time-of-use tariffs with significant arbitrage opportunity.
+      </Tab>
+      <Tab title="Manual">
+        Direct setpoint control — you specify the charge or discharge power in kW and the target SoC. TerawattEDGE holds the setpoint until you change it or revert to an automated mode.
+      </Tab>
+    </Tabs>
+  </Step>
+  <Step title="Configure Schedule mode (if applicable)">
+    For **Schedule** mode, define one or more charge windows and discharge windows:
+
+    - **Charge window**: set the start time, end time, and target maximum SoC (e.g., 06:00–10:00, charge to 90%)
+    - **Discharge window**: set the start time, end time, and minimum SoC cutoff (e.g., 18:00–22:00, discharge to 20%)
+    - Repeat pattern: daily, weekdays only, weekends only, or custom day selection
+
+    You can define multiple non-overlapping windows per day to model complex tariff periods.
+  </Step>
+  <Step title="Configure Peak Shaving mode (if applicable)">
+    For **Peak Shaving** mode:
+
+    1. Enter your **peak demand threshold** in kW — this is the maximum grid demand you want the site to reach
+    2. Set the **response ramp rate** (how quickly the battery ramps up dispatch when demand approaches the threshold)
+    3. Optionally enable **reserve buffer** — keeps a defined SoC percentage in reserve for demand response events rather than depleting the battery fully during off-peak hours
+
+    <Info>
+      TerawattOS reads demand in real time from your site meter via TerawattEDGE. Ensure your meter is connected and reporting before activating peak shaving.
+    </Info>
+  </Step>
+  <Step title="Configure ToU mode (if applicable)">
+    For **Time-of-Use** mode:
+
+    1. Upload your utility tariff schedule as a CSV, or select a pre-loaded utility tariff from the TerawattOS tariff library
+    2. Set your billing period start date so TerawattOS can calculate cost optimization across the full billing cycle
+    3. Optionally enable **solar forecast integration** — if solar PV is connected to the same site, TerawattOS incorporates generation forecasts into the dispatch plan to avoid charging from the grid when free solar generation is available
+  </Step>
+  <Step title="Save and activate">
+    Review your configuration in the summary panel, then click **Save and Activate**. TerawattEDGE receives the dispatch configuration immediately and begins executing the logic in real time. The asset's Dispatch Settings tab updates to show the active mode and current schedule.
+  </Step>
+</Steps>
+
+## Safety and Command Validation
+
+All dispatch commands sent through TerawattOS are validated against the asset's operating limits before execution. TerawattEDGE enforces these constraints at the edge layer — independently of cloud connectivity — which means out-of-range commands are rejected even if a manual override is attempted.
+
+<Warning>
+  Commands that exceed the battery's rated charge or discharge power, violate the configured SoC limits, or conflict with manufacturer-defined operating parameters are automatically rejected. The rejection is logged in the audit trail with the specific constraint that was violated.
+</Warning>
+
+If a dispatch command is rejected, TerawattOS raises a notification in the dashboard and records the rejection in the asset's event log. The battery reverts to its previous mode or falls back to idle — it does not enter an undefined state.
+
+## Protecting Battery Cycle Life
+
+<Tip>
+  Configure your SoC limits before activating any dispatch optimization mode. Protecting battery cycle life has a greater long-term financial impact than short-term ToU savings — degradation from deep cycling compounds over thousands of cycles. A conservative minimum SoC of 20% and maximum of 90% is a sensible starting point for most lithium chemistries.
+</Tip>
+
+TerawattOS tracks cycle count and depth-of-discharge history per battery asset. Navigate to **Assets → [Battery Asset] → Health & Degradation** to view cumulative cycle metrics and estimated remaining useful life based on actual usage patterns.
+
+<Note>
+  Battery optimization requires a TerawattEDGE device installed on the battery system with system control enabled. System control must be activated in your TerawattOS plan — contact your account manager or visit [terawattos.com/request-demo](https://terawattos.com/request-demo) to confirm your plan includes this capability.
+</Note>

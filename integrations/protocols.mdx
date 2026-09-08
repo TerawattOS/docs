@@ -1,0 +1,101 @@
+---
+title: "Supported Communication Protocols for Asset Integration"
+sidebarTitle: "Protocols"
+description: "TerawattEDGE supports all major industrial communication protocols — Modbus, SunSpec, DNP3, IEC 61850, OCPP — to connect any energy hardware to TerawattOS."
+---
+
+TerawattEDGE supports every major communication protocol used in the renewable energy and grid industries. Whatever your inverters, batteries, meters, or EV chargers speak, TerawattEDGE can listen — and translate that data into TerawattOS's normalized telemetry schema in under a second.
+
+## Protocol Overview
+
+| Protocol | Use Case | Supported By |
+|---|---|---|
+| Modbus RTU | Serial communication for inverters, meters | TerawattEDGE |
+| Modbus TCP | Ethernet-based inverter/BESS communication | TerawattEDGE |
+| SunSpec | Industry-standard solar/storage interoperability | TerawattEDGE |
+| DNP3 | Utility SCADA and DER communication | TerawattEDGE |
+| IEC 61850 | Substation automation and grid protection | TerawattEDGE |
+| OCPP | EV charging station communication | TerawattEDGE |
+| Custom/Proprietary | Vendor-specific protocols | Via custom adapter (contact Terawatt) |
+
+## Modbus RTU and Modbus TCP
+
+Modbus is the most widely deployed protocol in solar and storage installations worldwide, and TerawattEDGE implements both its variants in full.
+
+**Modbus RTU** operates over an RS-485 serial bus, making it the standard for connecting inverters and meters that predate Ethernet connectivity. A single RS-485 bus can support up to 247 devices, with TerawattEDGE acting as the master and polling each device in sequence. Typical assets include string inverters, energy meters, and legacy BESS units.
+
+**Modbus TCP** wraps the same Modbus data model over standard Ethernet/IP, enabling higher polling speeds and easier integration with newer inverter generations that ship with RJ-45 ports. TerawattEDGE connects to Modbus TCP devices directly over the site's local network.
+
+Both variants use the same register-mapping approach: the Terawatt team configures a register map for each OEM device model during onboarding, so you never need to manage register addresses manually.
+
+<Tip>
+  For sites with a mix of serial and Ethernet-connected assets, TerawattEDGE handles both simultaneously — RS-485 and Ethernet interfaces operate independently and in parallel.
+</Tip>
+
+## SunSpec
+
+SunSpec is an open interoperability standard backed by the SunSpec Alliance, designed specifically to eliminate the need for custom per-OEM register maps in solar and storage equipment.
+
+TerawattEDGE's SunSpec driver supports the full SunSpec model library, covering **1,000+ solar and storage device models** from all major manufacturers. When connecting to a SunSpec-compliant device, TerawattEDGE auto-discovers the device's supported models and begins reading data without manual register configuration.
+
+Key benefits of SunSpec integration:
+
+- **Plug-and-play**: no custom register mapping required for compliant devices
+- **Self-describing**: device capabilities are declared by the device itself
+- **Standardized units and scaling**: power, energy, voltage, and current values arrive pre-normalized
+- **Storage models**: SunSpec Model 802 covers battery storage, enabling deep BESS visibility out of the box
+
+SunSpec runs over both Modbus RTU and Modbus TCP physical layers, so devices are addressed using the same connectivity infrastructure already installed at your site.
+
+## DNP3
+
+DNP3 (Distributed Network Protocol 3) is the primary protocol for utility-grade DER communication and SCADA integration. It was designed for the demanding reliability and timing requirements of electric power systems.
+
+TerawattEDGE's DNP3 implementation supports:
+
+- **Time-stamped data points**: every reading carries a precise timestamp, enabling accurate event reconstruction for grid operators
+- **Event-driven reporting**: DNP3's unsolicited response mode lets devices push updates the moment values change, rather than waiting to be polled
+- **Class-based data objects**: static data, change events, and counters are organized into DNP3 Classes 0–2 for efficient selective polling
+- **Integrity polls and data link layer confirm**: ensuring data delivery reliability over unreliable physical links
+
+DNP3 is the preferred integration path for utility customers, independent power producers (IPPs) interfacing with grid operators, and sites subject to NERC or grid-code reporting requirements.
+
+## IEC 61850
+
+IEC 61850 is the international standard for communication in electrical substations and is increasingly deployed at the grid edge for DER control and protection applications.
+
+TerawattEDGE supports IEC 61850 for:
+
+- **Substation automation**: reading and publishing logical node (LN) data from protection and control IEDs
+- **Grid protection monitoring**: visibility into protection relay status, trip events, and interlocking conditions
+- **DER control**: using IEC 61850-7-420 logical node models for distributed energy resources, including PV inverters and storage
+- **GOOSE messaging**: for high-speed binary event communication between protection devices
+
+IEC 61850 integrations are typically deployed in utility and grid-connected sites where substation-grade communication is required. The Terawatt team works directly with your protection engineering team to configure the correct logical node mappings for your substation topology.
+
+## OCPP
+
+OCPP (Open Charge Point Protocol) is the open standard for communication between EV charging stations and central management systems.
+
+TerawattEDGE supports **OCPP 1.6 and OCPP 2.0.1**, enabling TerawattOS to monitor and manage your EV charging infrastructure alongside your generation and storage assets. Through the OCPP integration you can:
+
+- Monitor charger status, active sessions, energy delivered, and power draw in real time
+- Receive fault and error notifications for offline or faulted charge points
+- Track utilization rates and session history for fleet and commercial charging operations
+- View EV charging load as part of the full site energy balance alongside solar generation and battery storage
+
+OCPP connects over standard IP networking, so TerawattEDGE communicates with your charge points over the site's LAN or through a cloud-hosted CSMS bridge.
+
+## Custom and Proprietary Protocols
+
+Not every energy asset speaks an open protocol. Some manufacturers — particularly in the BESS and CHP space — use proprietary communication interfaces undocumented in public standards.
+
+TerawattEDGE's protocol driver architecture is modular, meaning custom adapters can be developed for any asset that exposes a deterministic communication interface, including:
+
+- Proprietary serial or TCP protocols with manufacturer documentation
+- REST or MQTT-based APIs from newer "connected" inverter platforms
+- Legacy BACnet, PROFIBUS, or IEC 60870-5-101/104 devices in hybrid deployments
+
+<Note>
+  If your asset uses a proprietary or non-standard protocol, contact the Terawatt team with the manufacturer's communication specification. Custom protocol adapters are typically delivered within **2–4 weeks** of receiving complete documentation. There is no additional platform fee for custom adapters on supported deployment tiers.
+</Note>

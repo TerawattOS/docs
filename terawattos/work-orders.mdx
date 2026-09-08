@@ -1,0 +1,109 @@
+---
+title: "Work Order Management for O&M Field Teams"
+sidebarTitle: "Work Orders"
+description: "TerawattOS replaces ad-hoc O&M coordination with structured work orders — from fault detection to field resolution, with a full audit trail."
+---
+
+TerawattOS work order management gives your operations and field teams a single, structured workflow for every maintenance task — from the moment a fault is detected to the moment it is resolved and documented. It replaces the WhatsApp threads, phone calls, and spreadsheet logs that most O&M teams rely on today with a tracked, auditable system that gives you, your clients, and your compliance records a complete picture of every site intervention.
+
+<Note>
+  Work orders can be created, updated, and closed from the TerawattOS mobile app even without internet connectivity. All changes are buffered locally and synced automatically when the device reconnects — so field technicians are never blocked by poor site coverage.
+</Note>
+
+## Creating Work Orders
+
+You can create a work order in two ways:
+
+<Tabs>
+  <Tab title="Manual Creation">
+    From the dashboard or any asset view, select **New Work Order**. Choose the affected site and asset, select the work type (corrective, preventive, inspection, emergency), describe the task, and assign it to a technician or team. Manual creation is useful for scheduling planned maintenance, site inspections, and cleaning campaigns.
+  </Tab>
+  <Tab title="Auto-Generated from Alert">
+    Configure alert rules to automatically generate a work order when specific fault conditions are triggered. The auto-generated work order is pre-populated with the fault type, affected asset, diagnostic notes, and estimated yield loss — and routed to the appropriate team based on your escalation configuration. No manual intervention is needed between fault detection and work order dispatch.
+  </Tab>
+</Tabs>
+
+## Work Order Details and Asset Context
+
+Every work order arrives with the context a technician needs to do the job efficiently — reducing diagnostic time on-site and eliminating the back-and-forth between field staff and the operations center.
+
+Each work order contains:
+
+- **Fault summary**: plain-language description of the detected issue, including the normalized fault code and raw OEM code
+- **Asset history**: previous work orders for the same asset, with resolution notes and parts used
+- **OEM documentation links**: relevant technical manuals and fault-resolution guides for the asset type and model
+- **Diagnostic notes**: root-cause analysis from the TerawattOS diagnostics engine, including yield loss since fault onset
+- **Site access instructions**: directions, gate codes, contact details, and safety notes specific to the site
+
+## Assignment and Escalation Routing
+
+Assign work orders to individual technicians or field teams. TerawattOS supports role-based routing rules so that the right work order reaches the right person automatically:
+
+<CardGroup cols={2}>
+  <Card title="Direct Assignment" icon="user">
+    Assign a work order to a named technician or a team queue. The assignee receives an in-app notification, email, or SMS depending on their notification preferences.
+  </Card>
+  <Card title="Skill-Based Routing" icon="diagram-project">
+    Define routing rules based on asset type, fault category, or site location. High-voltage BESS faults can route to certified electrical teams automatically, while routine cleaning orders go to general maintenance crews.
+  </Card>
+  <Card title="Escalation Rules" icon="arrow-up">
+    Set escalation triggers: if a work order is unacknowledged within a defined window, it automatically escalates to the next tier — from technician to team lead to operations manager. Escalation chains are fully configurable.
+  </Card>
+  <Card title="Multi-Client Isolation" icon="lock">
+    O&M contractors managing assets for multiple clients see all their work orders in a single queue — but role-based access controls ensure that client data, asset details, and work order history remain isolated between accounts.
+  </Card>
+</CardGroup>
+
+## Mobile Field Access
+
+The TerawattOS mobile app (iOS and Android) gives field technicians full work order access from their phones. On-site, a technician can:
+
+- View the full work order details including asset history and diagnostic notes
+- Follow the guided task checklist step by step
+- Capture photos, videos, and sensor readings directly in the work order
+- Update work order status (in progress, on hold, resolved) in real time
+- Add notes and close the work order — all from the mobile app
+
+<Info>
+  The mobile app is offline-resilient. Technicians working at sites with no mobile coverage can still access all work order details, complete checklists, capture media, and close tasks. All data is stored locally and synced to TerawattOS automatically when connectivity is restored.
+</Info>
+
+## Guided Task Checklists
+
+Each work order type includes a configurable step-by-step task checklist. Checklists ensure consistency across your field team — whether a technician is performing their tenth inverter reset or their first battery inspection. You can:
+
+- Use platform default checklists for common fault types (inverter faults, string failures, BESS issues)
+- Create custom checklists for specific asset models, site configurations, or client requirements
+- Mark checklist items as required — technicians cannot close the work order without completing mandatory steps
+- Include measurement fields in checklist steps, so technicians log actual readings (voltage, current, temperature) against expected values directly in the task
+
+## Photo and Video Documentation
+
+Technicians capture visual evidence directly within each work order — photos, videos, and annotated screenshots are attached to the specific task step that prompted them. Documentation is:
+
+- Automatically geotagged and timestamped on capture
+- Synced to TerawattOS and attached to the work order record when the device is online
+- Stored against the asset history, so future technicians and operations managers can review visual records from previous visits
+- Available for export in SLA compliance reports and warranty claims
+
+## SLA Tracking and Compliance
+
+TerawattOS tracks response and resolution times for every work order against the SLA parameters you define for each client or contract.
+
+- **Response time**: measured from fault detection (alert timestamp) to work order acknowledgement
+- **Resolution time**: measured from acknowledgement to work order close
+- **SLA breach alerts**: automated notifications when a work order is at risk of breaching its SLA window, giving your team time to escalate before the breach occurs
+- **Client-facing SLA reports**: auto-generated reports showing SLA performance over the reporting period — percentage of work orders resolved within target, average resolution time, and breach breakdown by fault category
+
+## Closing and Auditing
+
+Closing a work order requires a resolution summary and confirmation that all mandatory checklist items are complete. Once closed:
+
+- The full work order record — including all task completions, photos, sensor readings, timestamps, and technician notes — is locked and stored as a permanent audit entry
+- The associated fault event in TerawattOS is marked as resolved, and yield loss attribution for the event is finalized
+- The asset health score updates to reflect the resolution
+- The closure record is available for export and inclusion in client reports, warranty claims, and compliance documentation
+
+<Tip>
+  Use the audit trail from closed work orders when submitting warranty claims to OEM manufacturers. The timestamped fault onset, diagnostic notes, technician actions, and resolution record provide exactly the documentation most manufacturers require to process a warranty event.
+</Tip>

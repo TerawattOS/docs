@@ -1,0 +1,140 @@
+---
+title: "Performance Reports and Analytics in TerawattOS"
+sidebarTitle: "Reports"
+description: "TerawattOS auto-generates branded investor reports, ESG exports, and SLA compliance summaries directly from live telemetry — cutting manual effort by 90%."
+---
+
+TerawattOS performance reporting eliminates the manual effort of assembling portfolio reports. Instead of pulling CSVs, reformatting data, and rebuilding slides each month, you configure your report types once — and TerawattOS generates them automatically, directly from live telemetry, on whatever schedule you set. For most operations teams, this cuts report assembly time by 90%.
+
+<Note>
+  All reports pull directly from live telemetry stored in TerawattOS. There is no manual data entry, no stale exports, and no reconciliation required. When you send a report to an investor or client, the numbers match exactly what the platform recorded — because they come from the same source.
+</Note>
+
+## Report Types
+
+TerawattOS supports six categories of reports, covering every reporting need across your portfolio operations:
+
+<CardGroup cols={2}>
+  <Card title="Performance Summaries" icon="chart-bar">
+    Daily, weekly, or monthly summaries of generation, availability, performance ratio, and fault history for individual sites or your entire portfolio. Available as scheduled deliveries or on-demand exports.
+  </Card>
+  <Card title="Investor Reports" icon="file-chart-column">
+    Branded PDF and live web reports for limited partners, asset owners, and financing institutions. Auto-generated from live telemetry with your company logo and branding applied — no manual assembly required.
+  </Card>
+  <Card title="ESG and Scope 2 Reports" icon="leaf">
+    Automated, exportable, auditable renewable energy generation data formatted for GHG Protocol, CDP, and local ESG reporting frameworks. Covers Scope 2 emissions displacement and renewable energy certificate generation.
+  </Card>
+  <Card title="SLA Compliance Reports" icon="clipboard-check">
+    Client-facing documentation of O&M performance against contracted SLA parameters — response times, resolution times, availability percentages, and SLA breach history. Auto-generated per contract period.
+  </Card>
+  <Card title="Yield Loss Attribution" icon="chart-line-down">
+    Quantify the revenue impact of every downtime event in the reporting period, broken down by fault type, curtailment, grid outage, and scheduled maintenance. Includes kWh lost and revenue equivalent at the applicable tariff or PPA rate.
+  </Card>
+  <Card title="On-Demand Custom Reports" icon="magnifying-glass-chart">
+    Build ad-hoc reports by selecting the date range, sites, asset types, and metrics you need. Export immediately or save as a reusable template for future reporting cycles.
+  </Card>
+</CardGroup>
+
+## Investor Reporting
+
+Investor reports are designed for asset owners, limited partners, and financing institutions who need regular, reliable performance updates without requiring access to your operational platform.
+
+<Tabs>
+  <Tab title="Branded PDF Reports">
+    TerawattOS generates a fully formatted PDF report on your configured schedule — monthly, quarterly, or as required. The report includes generation performance, availability, PR trends, fault summary, and yield loss analysis for the period. Apply your company logo, color scheme, and contact details so the report looks like it came from your team — not a third-party monitoring platform.
+  </Tab>
+  <Tab title="Live Web Reports">
+    Share a persistent, password-protected web link that updates in real time from live telemetry. Investors can check current performance, review historical trends, and download data at any time — without you sending anything manually. The web report shows the same data as the PDF view, presented in an interactive format with charts and period-selector controls.
+  </Tab>
+  <Tab title="Stakeholder Viewer Access">
+    Grant read-only viewer access to specific investors or asset owners. Viewers see a curated health card — generation totals, availability percentage, PR trend, and active alert count — without access to operational details, fault codes, or work order records. Viewer links can be set to persist indefinitely or expire after a defined period.
+  </Tab>
+</Tabs>
+
+## ESG and Scope 2 Reporting
+
+TerawattOS generates ESG-ready reports that meet the data requirements of major sustainability reporting frameworks. For corporate sustainability teams and portfolio managers with ESG obligations:
+
+<Accordion title="GHG Protocol Scope 2 Reporting">
+  Export renewable energy generation data formatted for Scope 2 market-based accounting under the GHG Protocol Corporate Standard. Includes generation by period, displacement factor by grid region, and calculated CO₂ equivalent avoided. Data is auditable — every figure traces back to telemetry records with timestamps.
+</Accordion>
+
+<Accordion title="CDP Climate Disclosure">
+  Generate the renewable energy generation and displacement data required for CDP climate questionnaire responses. TerawattOS outputs the metrics CDP requires for energy-related questions in a format your sustainability team can paste directly into the CDP platform.
+</Accordion>
+
+<Accordion title="Local ESG Frameworks">
+  For operators in Africa and emerging markets, TerawattOS supports reporting against local regulatory ESG requirements and national renewable energy targets. Contact the Terawattos team to configure reporting outputs for your specific jurisdiction.
+</Accordion>
+
+<Accordion title="Renewable Energy Certificates">
+  Track generation data for renewable energy certificate (REC or I-REC) issuance by energy period and asset. TerawattOS provides the metered generation records required by certificate registries — exportable in the formats accepted by major I-REC issuers.
+</Accordion>
+
+## Yield Loss Analysis
+
+Every downtime event in TerawattOS is automatically assigned a yield loss value — the energy that was not generated during the event window, compared against the weather-adjusted expected output baseline. Yield loss reports give you and your clients a clear picture of where generation was lost and why.
+
+Yield loss is attributed across four categories:
+
+| Category | Description |
+|---|---|
+| **Fault-Driven Loss** | Generation lost due to inverter faults, string failures, BESS unavailability, or device-level errors. Each fault event shows kWh lost and revenue equivalent at your applicable tariff or PPA rate. |
+| **Curtailment** | Generation curtailed by grid operator instruction, export limits, or inverter clipping above the site's export cap. Tracked separately from fault losses for contract compliance purposes. |
+| **Grid Outage** | Generation lost due to utility grid interruptions. Isolated from site-side faults using meter-level voltage and frequency data — critical for force majeure and PPA contractual treatment. |
+| **Scheduled Maintenance** | Planned downtime for preventive maintenance, cleaning, or inspections. Logged against closed work orders and excluded from unplanned availability calculations. |
+
+## Report Scheduling and Delivery
+
+Configure report delivery schedules from the Reports section of the TerawattOS settings:
+
+<Steps>
+  <Step title="Select Report Type">
+    Choose the report type — performance summary, investor report, ESG export, SLA compliance, or yield loss analysis.
+  </Step>
+  <Step title="Define Scope">
+    Select the sites, asset types, or portfolio groups to include. You can create separate report configurations for different clients, asset classes, or geographic regions.
+  </Step>
+  <Step title="Set Schedule">
+    Choose a delivery schedule: daily, weekly, monthly, or quarterly. For investor reports, monthly delivery after the close of each calendar month is the most common configuration. SLA compliance reports typically align to the contract billing cycle.
+  </Step>
+  <Step title="Configure Recipients">
+    Add email addresses for report delivery. Recipients receive a direct download link to the PDF or a link to the live web report, depending on report type. No TerawattOS login is required for recipients of stakeholder viewer links.
+  </Step>
+  <Step title="Apply Branding">
+    Upload your company logo and set your brand color for investor-facing PDF reports. Branding is applied globally to all investor and stakeholder reports generated from your account.
+  </Step>
+</Steps>
+
+## Export Formats and Data Access
+
+<CardGroup cols={2}>
+  <Card title="PDF Export" icon="file-pdf">
+    All report types are available as formatted PDF exports — suitable for email delivery, filing, and investor data rooms. PDFs are generated on demand or on schedule and stored in your TerawattOS report archive.
+  </Card>
+  <Card title="Live Web URL" icon="link">
+    Investor and stakeholder reports are available as persistent live web URLs that update in real time. Share with investors or asset owners for continuous visibility without recurring email sends.
+  </Card>
+  <Card title="CSV / Raw Data Export" icon="file-csv">
+    Export raw telemetry and performance data as CSV for integration with your own analytics tools, financial models, or external reporting systems. Export by site, asset, and time period.
+  </Card>
+  <Card title="API Access" icon="code">
+    Access all performance data programmatically via the TerawattOS REST API. Use webhooks to push report-ready data to your EMS, SCADA, or business intelligence platform in real time.
+  </Card>
+</CardGroup>
+
+## Data Included in Reports
+
+Every TerawattOS performance report draws from the same live telemetry record. Standard report data fields include:
+
+- **Generation**: kWh produced by period (hourly, daily, monthly), total and by asset
+- **Specific Yield**: kWh/kWp normalized production for cross-site benchmarking
+- **Availability**: percentage of contracted generation hours the site was operational
+- **Performance Ratio (PR)**: actual vs. theoretical maximum output, irradiance-adjusted
+- **Fault History**: count, type, duration, and resolution status of all fault events in the period
+- **Yield Loss**: kWh and revenue impact by loss category (fault, curtailment, grid, maintenance)
+- **Benchmark Comparisons**: site performance vs. portfolio average and fleet benchmark
+
+<Tip>
+  Use the live web investor report link as a self-service transparency tool during fundraising or asset financing processes. Providing prospective investors with real-time access to operating asset performance — without manual reporting overhead — demonstrates both operational capability and data integrity.
+</Tip>

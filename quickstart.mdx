@@ -1,47 +1,85 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get Started with Terawattos in Minutes"
+sidebarTitle: "Quick Start"
+description: "Connect your first renewable energy asset to TerawattOS, view live telemetry, and configure your first alert — all in under 10 minutes."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+This guide walks you through connecting your first asset to Terawattos — from unboxing a TerawattEDGE dongle to seeing live power data in your portfolio dashboard. The entire process takes under 10 minutes for a single site, and the same workflow scales to thousands of sites without added complexity.
 
 ## Prerequisites
 
-Before you begin, you must have:
+Before you begin, make sure you have:
 
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
+- A **TerawattOS account** — [contact sales](https://terawattos.com/contact) to get your organisation provisioned.
+- A **TerawattEDGE dongle** — shipped to you after onboarding. Each dongle comes pre-configured with your organisation credentials.
+- The **TerawattOS mobile app** installed on your phone (iOS or Android).
+- Physical access to the asset's communications port (RS-485 or RJ-45, depending on the inverter or meter model).
 
-## Get started
+<Note>
+  TerawattEDGE stores up to **30 days of telemetry locally** if your site loses internet connectivity. The moment connectivity is restored, the device automatically syncs all buffered data to TerawattOS — no gaps in your historical record.
+</Note>
+
+## Connect Your First Asset
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Unbox and connect TerawattEDGE">
+    Locate the RS-485 communications port on your energy asset — this is typically labelled **COM**, **RS-485**, or **Modbus** on the device's terminal block or rear panel. Plug the TerawattEDGE dongle's RS-485 cable into that port, then connect the dongle to power via the included DC cable or USB-C adapter.
 
-    ```bash
-    npm install your-package
-    ```
+    TerawattEDGE communicates with your asset using whichever protocol the device supports — **Modbus RTU/TCP**, **SunSpec**, or any of 10+ supported OEM-proprietary protocols. No protocol configuration is needed at this stage; the dongle auto-detects the asset type during provisioning.
+
+    <Tip>
+      If you're a non-specialist or commissioning your first site, launch the **Commissioning Wizard** inside the TerawattOS mobile app before connecting cables. The wizard walks you through cable identification, port selection, and LED status checks with step-by-step photos matched to your specific asset model.
+    </Tip>
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
 
-    ```bash
-    your-cli init
-    ```
+  <Step title="Provision the device to your account">
+    Open the **TerawattOS mobile app** and tap **Add Site → Add Device**. Point your camera at the QR code printed on the TerawattEDGE dongle's label.
+
+    The app reads the device's unique identifier, authenticates it against your organisation's account, and registers it to the site you select — all automatically. You do not need to configure an IP address, port number, or DHCP reservation. TerawattEDGE establishes its own secure outbound connection to TerawattOS over **4G or WiFi** (whichever has the stronger signal).
+
+    Within about 60 seconds, the dongle's LED turns solid green, confirming a live cloud connection.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
 
-    ```bash
-    your-cli start
-    ```
+  <Step title="View live telemetry">
+    Return to the **Portfolio Dashboard** in the TerawattOS web app or mobile app. Your new site appears automatically, typically within 2–3 minutes of provisioning.
+
+    Click into the site to see:
+    - **Real-time AC/DC power output** (refreshed every 1–5 seconds)
+    - **Energy yield** for today, this week, and this month
+    - **Performance ratio** and capacity factor
+    - **Asset health score** based on live diagnostics
+
+    All data is normalised to a common schema regardless of the asset's OEM vendor, so the same dashboard layout works across every site in your portfolio.
+  </Step>
+
+  <Step title="Configure your first alert">
+    From the site view, navigate to **Alerts → New Alert Rule**. TerawattOS ships with a library of pre-built fault detection templates covering common failure modes — inverter over-temperature, string current imbalance, communication loss, grid frequency deviation, and more.
+
+    Select a template, adjust the threshold if needed, and choose your notification channel (email, SMS, or in-app push). Save the rule, and TerawattOS begins monitoring immediately.
+
+    When a fault condition is detected, the platform's **AI diagnostics engine** surfaces a probable root cause in under 5 minutes, so your team arrives on-site knowing what to fix rather than starting from scratch.
+  </Step>
+
+  <Step title="Scale to more sites">
+    Repeat the same process for every additional site. Each TerawattEDGE dongle is pre-registered to your organisation, so provisioning a new site is always a single QR-code scan — whether you are adding your second site or your two-hundredth.
+
+    TerawattOS scales to **10,000+ concurrent sites** within a single account, with role-based access controls so regional managers, field technicians, and investors each see exactly the data they need.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## What's Next
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+<CardGroup cols={2}>
+  <Card title="How It Works" icon="diagram-project" href="/how-it-works">
+    Understand the full sensor-to-action data loop from asset to dashboard.
+  </Card>
+  <Card title="Alert Configuration" icon="bell" href="/terawattos/alerts">
+    Build advanced alert rules, escalation chains, and on-call schedules.
+  </Card>
+  <Card title="Work Orders" icon="clipboard-list" href="/terawattos/work-orders">
+    Dispatch field technicians with AI-generated work orders.
+  </Card>
+  <Card title="OEM Compatibility" icon="list-check" href="/integrations/oem-compatibility">
+    Confirm your inverter, battery, or meter is on the supported devices list.
+  </Card>
+</CardGroup>

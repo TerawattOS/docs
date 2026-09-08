@@ -1,0 +1,104 @@
+---
+title: "Using the TerawattOS Mobile App for Field Operations"
+sidebarTitle: "Mobile App"
+description: "Use the TerawattOS mobile app to manage work orders, commission TerawattEDGE devices, and view live telemetry — fully offline-resilient in the field."
+---
+
+The TerawattOS mobile app gives field technicians a complete command center in their pocket. From live telemetry and work orders to IoT commissioning and asset documentation, every tool a technician needs on-site is available — even in areas with no internet connectivity. The app is available on iOS and Android.
+
+## Provisioning a New TerawattEDGE Device
+
+Commissioning a new TerawattEDGE dongle takes under five minutes using the in-app wizard. Complete the following steps at the asset location before powering the device.
+
+<Steps>
+  <Step title="Open the commissioning wizard">
+    Open the TerawattOS app and navigate to **Site → Add Device**. Select the site you are commissioning the device for from your assigned site list.
+  </Step>
+  <Step title="Scan the device QR code">
+    Locate the QR code printed on the TerawattEDGE dongle casing and tap **Scan QR Code**. The app reads the device serial number and pre-populates the device registration form automatically.
+  </Step>
+  <Step title="Complete the 7-step commissioning wizard">
+    The wizard walks you through the full device configuration:
+
+    1. **Site assignment** — confirm or change the site the device is being assigned to
+    2. **Asset type** — select the asset class (inverter, BESS, meter, EV charger, CHP, other)
+    3. **OEM and model** — choose the manufacturer and model from the supported device library
+    4. **Communication protocol** — select Modbus RTU, Modbus TCP, SunSpec, DNP3, IEC 61850, OCPP, or OEM-native
+    5. **Polling interval** — set how frequently the device reads data from the asset (default: 1 second)
+    6. **Connectivity mode** — choose 4G, WiFi, or dual (recommended); enter WiFi credentials if applicable
+    7. **Review and confirm** — verify all settings before activating the device
+  </Step>
+  <Step title="Verify device connectivity">
+    After activation, the TerawattEDGE dongle runs a self-test. Watch for the **green LED** on the device — solid green indicates successful asset communication and cloud connectivity. In the app, navigate to the asset dashboard and confirm that live telemetry values are populating in real time.
+
+    <Warning>
+      A flashing amber LED indicates the device is connected to the cloud but cannot communicate with the asset. Double-check the protocol selection and cable connections before closing the work order.
+    </Warning>
+  </Step>
+</Steps>
+
+## Managing Work Orders in the Field
+
+Work orders are assigned to technicians by the operations team in TerawattOS and appear automatically in the mobile app. Each work order includes full asset context so you arrive on-site informed.
+
+<Accordion title="Viewing and understanding a work order">
+  Open the **Work Orders** tab to see all work orders assigned to you, sorted by priority and due date. Tap any work order to open it and review:
+
+  - **Asset history** — recent fault codes, maintenance records, and prior work orders for the same asset
+  - **Fault codes** — decoded fault descriptions with likely causes, pulled from the OEM fault code library
+  - **Manuals and documentation** — relevant wiring diagrams, datasheet specs, and commissioning guides cached locally on the device
+  - **Site access notes** — any special access instructions entered by the operations team
+</Accordion>
+
+<Accordion title="Completing tasks and capturing evidence">
+  Each work order contains a guided task checklist. Work through the checklist sequentially — the app enforces task order where safety or procedural dependencies exist.
+
+  To capture evidence:
+  1. Tap the camera icon within any task
+  2. Take a photo or record a short video directly in the app
+  3. Evidence is automatically attached to the task and work order — no manual upload needed
+
+  When all tasks are complete, tap **Close Work Order** and add a closing note. The completed work order, including all evidence, syncs to TerawattOS automatically when the device regains connectivity.
+</Accordion>
+
+<Accordion title="Creating an unplanned work order in the field">
+  If you identify a fault or issue on-site that doesn't have a work order, you can create one directly from the mobile app:
+
+  1. Navigate to the asset in the **Sites** tab
+  2. Tap **Create Work Order**
+  3. Select the fault category, add a description, and attach any photos
+  4. Submit — the work order appears in TerawattOS for the operations team and is immediately assigned to you if created while on-site
+</Accordion>
+
+## Viewing Live Telemetry
+
+Navigate to any site or asset from the **Sites** tab to view real-time telemetry readings — AC/DC power, voltage, current, frequency, state of charge, temperature, and all other parameters reported by the asset.
+
+The app displays a **connectivity indicator** at the top of every asset view:
+
+- 🟢 **Live** — data is streaming in real time from TerawattEDGE
+- 🟡 **Cached** — device connectivity is intermittent; values shown are from the most recent successful read, with a timestamp
+- 🔴 **Offline** — no data received beyond the offline threshold; an alert has been raised in TerawattOS
+
+## Offline Capabilities
+
+The TerawattOS mobile app is built for the realities of remote renewable energy sites — unreliable coverage, no WiFi, and vast distances from the NOC. All critical data is cached locally on the device.
+
+| Feature | Online | Offline |
+|---|---|---|
+| View assigned work orders | ✅ | ✅ |
+| Complete tasks and checklists | ✅ | ✅ |
+| Capture and attach photo/video evidence | ✅ | ✅ |
+| Create unplanned work orders | ✅ | ✅ |
+| Commission new TerawattEDGE devices | ✅ | ✅ |
+| View live telemetry | ✅ | ✅ (cached values) |
+| View asset manuals and documentation | ✅ | ✅ |
+| Sync completed work orders | ✅ | ⏳ Syncs when back online |
+
+<Tip>
+  Before heading to remote sites with no expected coverage, open the app while connected and allow the offline cache to refresh. Tap **Settings → Offline Cache → Sync Now** to download the latest work orders, asset data, and documentation for all your assigned sites. A fully charged device running the offline cache will support a full day of field work without any connectivity.
+</Tip>
+
+<Info>
+  The offline cache stores up to 90 days of asset history and all open work orders for your assigned sites. The cache is encrypted and stored securely on the device — remote wipe is available from TerawattOS if a device is lost or stolen.
+</Info>

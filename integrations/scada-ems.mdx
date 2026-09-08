@@ -1,0 +1,179 @@
+---
+title: "SCADA and EMS Integration with Terawattos"
+sidebarTitle: "SCADA & EMS"
+description: "Integrate TerawattOS telemetry into your utility EMS, SCADA, or forecasting system using normalized DER data streams, REST API, and real-time webhooks."
+---
+
+TerawattOS integrates directly with utility Energy Management Systems (EMS), SCADA platforms, and grid forecasting tools — giving operators and utilities a clean, structured stream of DER telemetry without the usual complexity of multi-vendor field integration. Whether you're running a Virtual Power Plant program, fulfilling grid-code reporting obligations, or feeding a generation forecasting model, TerawattOS gives you one normalized data source for your entire distributed fleet.
+
+## Integration Architecture
+
+The integration stack has two layers working together:
+
+**Field layer — TerawattEDGE**: deployed at each site, TerawattEDGE connects directly to energy assets using their native protocols (Modbus, SunSpec, DNP3, IEC 61850, OCPP). It handles all the OEM-specific translation at the edge — polling registers, mapping data models, and buffering readings during connectivity interruptions.
+
+**Platform layer — TerawattOS**: TerawattEDGE streams normalized telemetry to TerawattOS, where it is validated, stored, and made available through the REST API and webhook system. Your EMS, SCADA, or forecasting system connects to TerawattOS — not directly to the field devices — and receives a clean, consistent data schema regardless of how many OEMs or protocols exist in the field.
+
+```
+Energy Assets (SolarEdge, SMA, Huawei, custom)
+        │  Modbus / SunSpec / DNP3 / IEC 61850
+        ▼
+  TerawattEDGE (on-site)
+        │  Normalized telemetry stream, &lt;1s latency
+        ▼
+    TerawattOS (cloud)
+        │  REST API / Webhooks
+        ▼
+  Your EMS / SCADA / Forecasting System
+```
+
+## Performance at Scale
+
+TerawattOS is designed for large portfolio operations:
+
+- Supports **10,000+ concurrent assets** across distributed sites
+- **14ms average API response latency** at the platform layer
+- **Under 1 second end-to-end telemetry latency** from asset to API
+- **30-day on-device buffer** in TerawattEDGE for sites with intermittent connectivity — data is back-filled automatically when connectivity is restored, ensuring no gaps in historical records
+
+## Normalized Data Schema
+
+A core value of the TerawattOS integration layer is that your EMS receives data in a **single, consistent schema** regardless of what hardware is in the field. You do not need to write per-OEM data transformations on your side.
+
+Key normalized fields available via the API for all connected DER assets:
+
+| Field | Type | Description |
+|---|---|---|
+| `ac_power_kw` | `number` | Real-time AC output power (kW) |
+| `energy_today_kwh` | `number` | Energy generated or discharged today (kWh) |
+| `energy_total_kwh` | `number` | Lifetime energy (kWh) |
+| `soc_pct` | `number` | Battery state of charge (%) — storage assets only |
+| `available_capacity_kw` | `number` | Available dispatchable capacity (kW) |
+| `status` | `string` | Normalized asset status: `producing`, `standby`, `fault`, `offline`, `curtailed` |
+| `fault_code` | `string \| null` | Standardized fault code from TerawattOS fault taxonomy |
+| `timestamp` | `string` | ISO 8601 UTC timestamp of the reading |
+
+All field names, units, and status codes are consistent across all asset types and OEMs. Map this schema once into your EMS data model — it never changes when you add new sites or vendors.
+
+## Integration Methods
+
+TerawattOS supports three integration patterns depending on your system's architecture and data volume requirements:
+
+<Tabs>
+  <Tab title="REST API Polling">
+    **Best for**: Periodic data ingestion, operational dashboards, moderate-frequency polling (1-minute intervals and above).
+
+    Your EMS or SCADA system makes scheduled HTTP GET requests to the TerawattOS REST API to retrieve the latest telemetry or historical data for your asset fleet. The API supports portfolio-level queries so you can fetch all assets across all sites in a single paginated request.
+
+    ```http
+    GET /v1/sites/{siteId}/assets?include_telemetry=true
+    Authorization: Bearer YOUR_API_KEY
+    ```
+
+    Polling at 1-minute intervals across 10,000 assets is well within the API's capacity using concurrent paginated requests.
+  </Tab>
+  <Tab title="Webhooks">
+    **Best for**: Event-driven integration, fault management, real-time alert forwarding, dispatch triggers.
+
+    TerawattOS pushes event notifications to your registered endpoint the moment a qualifying event occurs — no polling required. Events include fault detection, alert threshold crossings, asset offline/online transitions, and work order state changes.
+
+    Configure webhook subscriptions in **Settings → Integrations → Webhooks**. Events are delivered with sub-5-second latency from the triggering condition.
+
+    Webhook payloads are signed with HMAC-SHA256 — see the [API & Webhooks](/integrations/api-webhooks) page for signature verification examples.
+  </Tab>
+  <Tab title="Bulk Export">
+    **Best for**: Batch ingestion into data warehouses, forecasting model training datasets, regulatory submissions, long-range historical analysis.
+
+    TerawattOS generates scheduled bulk exports of telemetry data in CSV or JSON format, delivered to your configured S3-compatible storage bucket or SFTP endpoint. Exports can be scoped by portfolio, site, asset type, or time range.
+
+    Configure bulk exports in **Settings → Integrations → Data Exports**. Supported cadences: hourly, daily, and monthly. Data is exported with full schema documentation for downstream pipeline development.
+  </Tab>
+</Tabs>
+
+## Use Cases
+
+### DER Visibility and Dispatch (VPP and Demand Response)
+
+TerawattOS provides the real-time visibility layer required for Virtual Power Plant (VPP) programs and demand response participation. Through the API your EMS receives:
+
+- **Aggregate portfolio metrics**: total available capacity, current output, and forecast generation across all enrolled DER assets
+- **Per-asset availability**: real-time `available_capacity_kw` and `status` for each asset, updated every second
+- **Battery dispatch data**: state of charge, charge/discharge rate, and available charge capacity for each BESS asset
+
+For dispatch programs, TerawattOS also supports battery dispatch commands — charge/discharge schedules, peak-shaving setpoints, and ToU optimization parameters — delivered to field assets through TerawattEDGE within one second of the API call.
+
+### Regulatory Data Pipeline
+
+TerawattOS automates DER data reporting for grid operator and regulatory submissions:
+
+- **Audit trails**: every telemetry reading, command, and state change is logged with a tamper-evident audit record
+- **Digital signatures**: export packages for regulatory submissions include cryptographic signatures for data integrity verification
+- **Standard regulatory formats**: export in formats accepted by common grid operator reporting specifications, reducing manual data transformation
+- **Automated scheduling**: configure report generation and submission on a fixed schedule without manual intervention
+
+### Forecasting Model Inputs
+
+TerawattOS's historical telemetry API provides clean, gap-free datasets for generation forecasting models:
+
+- Sub-minute resolution telemetry going back to site commissioning date
+- Weather-correlated performance data (irradiance, temperature, wind speed) where available through integrated weather data feeds
+- Automatic back-fill of offline periods using TerawattEDGE's 30-day local buffer
+
+## Setting Up Your Integration
+
+<Steps>
+  <Step title="Request API Credentials">
+    Contact the Terawatt integrations team to provision a dedicated API key for your EMS or SCADA system. For utility-scale deployments, dedicated API credentials with elevated rate limits are available. You can also generate standard API keys yourself in **TerawattOS → Settings → API Keys**.
+  </Step>
+  <Step title="Authenticate to the REST API">
+    Test your credentials by calling the `/v1/sites` endpoint. A successful `200` response confirms authentication is working and returns your site list.
+
+    ```http
+    GET https://api.terawattos.com/v1/sites
+    Authorization: Bearer YOUR_API_KEY
+    ```
+  </Step>
+  <Step title="Discover Your DER Fleet">
+    Query the `/sites` and `/assets` endpoints to retrieve the full inventory of your connected DER assets, including asset IDs, types, OEMs, capacities, and current statuses. Store the asset IDs — you'll use them for all subsequent telemetry queries.
+
+    ```http
+    GET https://api.terawattos.com/v1/sites/{siteId}/assets
+    Authorization: Bearer YOUR_API_KEY
+    ```
+  </Step>
+  <Step title="Subscribe to Webhooks">
+    Register your EMS endpoint to receive real-time event notifications. Go to **TerawattOS → Settings → Integrations → Webhooks → Add Endpoint** and subscribe to the event types relevant to your integration — at minimum `fault.detected`, `asset.offline`, and `alert.triggered` for operational visibility.
+  </Step>
+  <Step title="Map the Normalized Schema to Your EMS Data Model">
+    Use the TerawattOS field reference to map the normalized telemetry schema to your EMS's internal data model. Because all vendors and protocols are already normalized by TerawattOS, this mapping is done once and applies to all current and future assets in your portfolio. The Terawatt integrations team can provide a full schema reference document and sample payloads for your development team.
+  </Step>
+</Steps>
+
+## Virtual Power Plant Visibility
+
+For operators running VPP aggregation programs, TerawattOS exposes portfolio-level aggregate endpoints that give your EMS a real-time view of total enrolled capacity:
+
+```http
+GET /v1/portfolio/aggregate?asset_type=bess&metric=available_capacity_kw
+Authorization: Bearer YOUR_API_KEY
+```
+
+```json
+{
+  "metric": "available_capacity_kw",
+  "asset_type": "bess",
+  "timestamp": "2025-07-14T11:44:00Z",
+  "aggregate": {
+    "total_enrolled_assets": 142,
+    "assets_online": 138,
+    "total_available_kw": 8340,
+    "total_soc_pct_avg": 71.4
+  }
+}
+```
+
+This gives your dispatch system a single API call to assess total available DER capacity before issuing a dispatch instruction — no need to aggregate per-asset responses on your side.
+
+<Note>
+  For utility-scale deployments with custom SCADA integration requirements — including dedicated protocol bridges, bespoke data models, or real-time streaming integration — the Terawatt integrations team provides dedicated onboarding support. Reach out to your account contact or email integrations@terawattos.com to begin scoping your integration.
+</Note>

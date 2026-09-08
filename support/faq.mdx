@@ -1,0 +1,93 @@
+---
+title: "Frequently Asked Questions About Terawattos"
+sidebarTitle: "FAQ"
+description: "Answers to common questions about TerawattOS features, multi-OEM integrations, onboarding timelines, data security, and pricing for your portfolio."
+---
+
+This FAQ covers the questions operators, field teams, and investors ask most often about the Terawattos platform — from asset compatibility and multi-OEM integrations to onboarding timelines, security practices, and how pricing scales with your portfolio.
+
+## Platform & Features
+
+<Accordion title="What types of energy assets does TerawattOS support?">
+  TerawattOS is asset-agnostic across the full distributed energy spectrum. It supports solar PV, wind, battery energy storage systems (BESS), inverters, EV charging stations, combined heat and power (CHP) units, and hybrid sites. The guiding principle is simple: if an asset generates, stores, or consumes energy and has a communication interface, Terawattos can monitor and operate it.
+</Accordion>
+
+<Accordion title="Is TerawattOS suitable for small portfolios, or only large-scale operators?">
+  TerawattOS is designed to scale from 10 to 10,000+ sites. Small portfolios benefit from the same real-time monitoring, asset diagnostics, work order management, and investor reporting capabilities as large enterprise fleets. Pricing scales with portfolio size, so you only pay for what you operate.
+</Accordion>
+
+<Accordion title="How long does it take to add a new site after initial setup?">
+  Adding a site after your initial onboarding takes minutes. Install a TerawattEDGE device at the site, scan its QR code using the Terawattos mobile app, and the site appears automatically in your portfolio dashboard. No manual provisioning steps are required on your end.
+</Accordion>
+
+<Accordion title="Does TerawattOS work without constant internet at the site?">
+  Yes. TerawattEDGE buffers up to 30 days of telemetry locally when internet connectivity is unavailable. The Terawattos mobile app is also fully offline-resilient, allowing field technicians to access work orders, log faults, and complete inspections without a live connection. All buffered data syncs automatically the moment connectivity returns — no data is lost.
+</Accordion>
+
+## Integrations
+
+<Accordion title="How does multi-OEM integration work?">
+  TerawattEDGE includes a universal protocol adapter that speaks directly to assets from any manufacturer. It supports Modbus RTU/TCP, SunSpec, DNP3, IEC 61850, and OCPP out of the box. Data from every vendor is normalized into TerawattOS's common schema before it reaches the platform, so you see a consistent view across your entire portfolio regardless of how many OEMs are represented. No per-vendor custom integration work is required on your end.
+</Accordion>
+
+<Accordion title="What if my asset uses a proprietary protocol not on the standard list?">
+  Contact the Terawatt team. Custom protocol adapters are available and built to your asset's specification. Typical turnaround is 2–4 weeks depending on the complexity of the protocol and the availability of documentation from the manufacturer. Once built, the adapter is deployed to your TerawattEDGE devices remotely via an over-the-air update.
+</Accordion>
+
+<Accordion title="Does TerawattOS integrate with existing SCADA or EMS systems?">
+  Yes. TerawattOS exposes a REST API and webhooks for integration with your existing SCADA, EMS, or any third-party platform. The API supports 10,000+ concurrent assets at an average latency of 14ms. See the SCADA & EMS Integration guide for authentication details, endpoint references, and example payloads.
+</Accordion>
+
+## Implementation & Onboarding
+
+<Accordion title="How long does onboarding and integration take?">
+  The discovery call and initial hardware configuration typically take about one week from first contact to hardware shipment. Most customers have their first site live within 2–5 days of receiving their TerawattEDGE devices. Full portfolio deployment scales with the number of sites — Terawatt has successfully onboarded 14-site fleets in under 10 weeks from kickoff to all sites live.
+</Accordion>
+
+<Accordion title="Do I need specialist contractors to install TerawattEDGE?">
+  No. TerawattEDGE is designed for installation by any technician familiar with energy equipment — no specialist electrical contractor is required. The 7-step commissioning wizard in the Terawattos mobile app guides the technician through the entire process, from cabling to protocol configuration and verification. Average install time per site is 40–90 minutes.
+</Accordion>
+
+<Accordion title="What does the training and onboarding session cover?">
+  Your onboarding session is a hands-on walkthrough of the platform configured specifically for your portfolio. It covers configuring alert thresholds for your asset types, setting up user roles and permissions for your team, onboarding field technicians to the mobile app and work order workflow, and a full walkthrough of the portfolio dashboard and reporting tools. Most customers complete onboarding in a single session.
+</Accordion>
+
+## Security & Compliance
+
+<Accordion title="How is data secured and where is it stored?">
+  All telemetry is transmitted over MQTT with TLS 1.3 encryption and mutual device authentication — the platform verifies device identity before accepting any data. Data is stored in Terawatt's cloud infrastructure with geographic redundancy. The platform maintains a 99.97% uptime SLA, and all data transmission between TerawattEDGE devices and the cloud is encrypted end-to-end.
+</Accordion>
+
+<Accordion title="Who can access my portfolio data?">
+  Access is governed by role-based permissions that you manage entirely from **Settings → Team**. The three built-in roles are:
+
+  - **Operator** — full access to all platform features, including configuration and alert management
+  - **Viewer** — read-only access to dashboards and reports, suitable for investors and clients
+  - **Technician** — access to mobile work order features and site-level diagnostics only
+
+  You can add, remove, and modify user roles at any time.
+</Accordion>
+
+<Accordion title="Is TerawattOS compliant with data protection regulations?">
+  Yes. Terawattos is built with data protection compliance in mind. Contact the Terawatt team for specific compliance documentation applicable to your region and regulatory environment, including any certifications or data residency requirements relevant to your jurisdiction.
+</Accordion>
+
+## Pricing & Contracts
+
+<Accordion title="What does early access include?">
+  Early access customers receive the full TerawattOS platform — real-time monitoring, asset diagnostics, work order management, investor reporting, and API access — along with dedicated onboarding support and direct access to the product team. This gives early customers a direct line to influence the product roadmap. Contact the team using the link below for current early access pricing.
+</Accordion>
+
+<Accordion title="How is pricing structured?">
+  Pricing scales with the size of your portfolio — specifically the number of sites and assets under management. There are no flat per-feature fees; you pay for the scale at which you operate. Contact the Terawattos sales team for a quote tailored to your portfolio's specific size and asset mix.
+</Accordion>
+
+<CardGroup cols={1}>
+  <Card
+    title="Still have questions? Talk to the Terawattos team"
+    icon="message"
+    href="https://terawattos.com/contact-sales"
+  >
+    Reach out to the Terawattos team for pricing, custom integration enquiries, compliance documentation, or anything not covered above.
+  </Card>
+</CardGroup>

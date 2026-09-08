@@ -1,0 +1,102 @@
+---
+title: "Navigate the TerawattOS Portfolio Dashboard"
+sidebarTitle: "Dashboard"
+description: "The TerawattOS dashboard gives you a live, centralized view of every site and asset in your portfolio — filterable, drillable, and mobile-ready."
+---
+
+The TerawattOS portfolio dashboard is your operational command center. It displays a live, continuously refreshing view of every site and asset in your fleet — from generation performance and availability to active faults and performance ratios. You don't wait for end-of-day summaries or manually pull reports; the dashboard reflects the current operational state of your entire portfolio at all times.
+
+<Note>
+  Dashboard data is refreshed continuously from live telemetry — what you see reflects the current operational state of your assets, not end-of-day or hourly snapshots. Latency from asset to dashboard is under one second when sites are connected via TerawattEDGE.
+</Note>
+
+## Portfolio Map View
+
+The default landing view is the portfolio map — a geographic representation of every site in your account, color-coded by live operational status.
+
+- **Green**: site is generating at or above expected output
+- **Amber**: site has an active performance alert or is generating below threshold
+- **Red**: site has an active fault, communication failure, or zero-generation event
+- **Grey**: site is offline, in scheduled maintenance, or outside generation hours
+
+Click any site marker to open the site summary card, which shows real-time generation, current availability, active alert count, and a thumbnail of today's generation curve. From the summary card, you drill directly into the full site view.
+
+## Site-Level Drill-Down
+
+Clicking into a site opens the full site dashboard, where you can inspect individual asset performance down to the string and device level.
+
+<Tabs>
+  <Tab title="Generation Curve">
+    View the day's generation profile as an intraday curve — actual output plotted against the weather-adjusted expected output baseline. Deviations are highlighted automatically, making it easy to spot clipping events, morning ramp anomalies, or afternoon underperformance caused by soiling or shading.
+  </Tab>
+  <Tab title="Per-Asset Telemetry">
+    See live readings for every connected device: inverter AC/DC power, string currents, battery state of charge, meter import/export, and any custom sensor data streamed via TerawattEDGE. Each asset shows its current health score and any active fault codes.
+  </Tab>
+  <Tab title="Availability Timeline">
+    Review the site's availability history for the selected date range — broken down by planned downtime, unplanned faults, grid outages, and communication losses. Availability is calculated per IEC 61724 conventions and displayed as a percentage.
+  </Tab>
+</Tabs>
+
+## Key Metrics at a Glance
+
+Every site and portfolio view surfaces the following metrics by default:
+
+| Metric | Description |
+|---|---|
+| **Generation (kWh)** | Total energy produced in the selected period |
+| **Specific Yield (kWh/kWp)** | Normalized production per installed kilowatt-peak |
+| **Availability %** | Percentage of time the site was capable of generating |
+| **Performance Ratio (PR)** | Ratio of actual to theoretical maximum output, adjusted for irradiance |
+| **Active Faults** | Count of open fault events currently affecting the site |
+
+## Normalized Benchmarking Across Sites
+
+Because TerawattOS normalizes data from all connected OEMs into a common schema, you can benchmark performance across sites with different hardware, configurations, and locations — using specific yield (kWh/kWp) as the comparison metric.
+
+The benchmarking panel ranks all sites in your portfolio by specific yield for any selected period. Sites that consistently rank in the bottom quartile are flagged for diagnostic review. This gives you a data-driven prioritization queue for your O&M team rather than relying on guesswork about which sites need attention.
+
+## Multi-Site Filtering
+
+Use the filter bar at the top of the portfolio dashboard to narrow your view to any subset of sites:
+
+<CardGroup cols={2}>
+  <Card title="Filter by Region" icon="map">
+    Group and view sites by country, province, or custom geographic tag. Useful for portfolio managers operating across multiple markets.
+  </Card>
+  <Card title="Filter by Asset Type" icon="solar-panel">
+    Isolate solar PV, BESS, wind, or EV charging assets across your fleet to compare performance within each asset class.
+  </Card>
+  <Card title="Filter by OEM Vendor" icon="plug">
+    View only sites with SolarEdge, SMA, Huawei, or any other connected OEM — helpful when investigating a fleet-wide issue tied to a specific manufacturer firmware update.
+  </Card>
+  <Card title="Filter by Alert Status" icon="bell">
+    Surface only sites with active alerts, or filter by alert severity to prioritize your daily operations review.
+  </Card>
+</CardGroup>
+
+## Stakeholder Viewer Access
+
+You can share a read-only health card summary for any site or portfolio subset with investors, asset owners, or clients — without requiring them to create a TerawattOS account.
+
+From the site or portfolio dashboard, generate a shareable viewer link. The viewer link displays:
+
+- Current generation and availability status
+- Monthly and year-to-date energy production
+- Active alert count (without operational detail)
+- Performance ratio trend
+
+The viewer link updates in real time from live telemetry and can be embedded in investor portals or sent via email. You control whether the link is persistent or expires after a set period.
+
+<Info>
+  Stakeholder viewer links display operational health data only. Fault codes, work order details, and configuration settings are never exposed through viewer access — your operational data stays private.
+</Info>
+
+## Mobile Dashboard
+
+The full portfolio dashboard is available on the TerawattOS mobile app for iOS and Android. Field technicians and operations managers get the same live data on their phones — including the portfolio map, site drill-down, per-asset telemetry, and active alerts.
+
+The mobile app is offline-resilient: it buffers data locally so you can review asset history and access site documentation even when working in areas with poor connectivity. Updates sync automatically when connectivity is restored.
+
+<Tip>
+  Use the mobile dashboard during site visits to review live telemetry in real time alongside the physical asset — compare what the inverter display shows against what TerawattOS is streaming to confirm sensor accuracy and confirm that data is flowing correctly.
+</Tip>

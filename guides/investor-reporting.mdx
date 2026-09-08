@@ -1,0 +1,129 @@
+---
+title: "Generate Automated Investor and ESG Reports in TerawattOS"
+sidebarTitle: "Investor Reporting"
+description: "Automatically generate branded performance reports and auditable ESG data for investors, asset owners, and sustainability teams — straight from live telemetry."
+---
+
+TerawattOS automatically assembles performance reports from the live telemetry streaming through your fleet — no manual data collection, no spreadsheet assembly, no data gaps hidden in averages. Reports are generated on demand or on a schedule, branded with your company identity, and shareable directly with investors, asset owners, and sustainability stakeholders.
+
+## Available Report Types
+
+<CardGroup cols={2}>
+  <Card title="Portfolio Performance Summary" icon="chart-bar">
+    Aggregated generation, availability, performance ratio (PR), and yield loss across your entire portfolio or a selected subset of sites. Available for any time period.
+  </Card>
+  <Card title="Site-Level Report" icon="location-dot">
+    Drill-down performance report for a single site, including asset-level breakdowns, fault event summary, availability by asset, and generation vs. forecast comparison.
+  </Card>
+  <Card title="Investor Report" icon="file-invoice-dollar">
+    Branded PDF or shareable live web URL designed for LPs and asset owners. Includes portfolio health cards, generation summary, uptime statistics, and incident summary — in a clean, non-technical format.
+  </Card>
+  <Card title="ESG / Scope 2 Report" icon="leaf">
+    Auditable renewable energy consumption and generation data formatted for GHG Protocol, CDP, and regional sustainability reporting frameworks. Exportable in CSV and PDF.
+  </Card>
+  <Card title="SLA Compliance Report" icon="shield-check">
+    Response and resolution time metrics per contract, benchmarked against agreed SLA targets. Provides auditable proof of O&M performance for clients.
+  </Card>
+  <Card title="Yield Loss Attribution Report" icon="triangle-exclamation">
+    Quantifies the revenue impact of downtime by category: equipment fault, curtailment, grid outage, and scheduled maintenance. Helps prioritize O&M interventions by financial impact.
+  </Card>
+</CardGroup>
+
+## Creating and Scheduling a Report
+
+<Steps>
+  <Step title="Open the Reports module">
+    From the TerawattOS sidebar, navigate to **Reports**. You will see a list of previously generated reports and any active delivery schedules.
+  </Step>
+  <Step title="Select report type and scope">
+    Click **New Report** and choose from the available report types. Then define the scope:
+
+    - **Portfolio** — includes all sites in your account, or a named portfolio group
+    - **Site** — select one or more individual sites
+    - **Date range** — choose a preset period (last 7 days, last month, last quarter, custom range) or enter specific start and end dates
+  </Step>
+  <Step title="Configure branding">
+    Customize the report to reflect your company identity:
+
+    - Upload your company logo (PNG or SVG, recommended minimum 300px wide)
+    - Enter your company name as it should appear in the report header and footer
+    - Choose a primary color to apply to charts, headings, and accents
+    - Optionally add a cover page message or disclaimer for investor-facing reports
+
+    <Info>
+      Branding settings are saved per organization. Once configured, all future reports use the same branding by default — you do not need to reconfigure for each report.
+    </Info>
+  </Step>
+  <Step title="Preview the report">
+    Click **Preview** to render a full-resolution preview of the report in the browser. Verify that the data scope, date range, and branding appear as intended before generating or scheduling.
+  </Step>
+  <Step title="Generate or schedule delivery">
+    You have two options:
+
+    <Tabs>
+      <Tab title="Generate Now (On-Demand)">
+        Click **Generate Report** to produce the report immediately. Depending on portfolio size and date range, generation takes between a few seconds and two minutes. Once complete, download the PDF or copy the live web URL.
+      </Tab>
+      <Tab title="Scheduled Delivery">
+        Click **Schedule** to set up recurring automated delivery:
+
+        1. Choose delivery frequency: **daily**, **weekly**, or **monthly**
+        2. For weekly: select the day of the week the report should be generated
+        3. For monthly: select the day of the month (e.g., the 1st of each month covers the prior calendar month)
+        4. Enter recipient email addresses — reports are delivered as PDF attachments with a summary email
+        5. Click **Activate Schedule**
+
+        Scheduled reports are generated automatically and delivered without any manual action required.
+      </Tab>
+    </Tabs>
+  </Step>
+  <Step title="Share with investors or clients">
+    For investor-facing delivery, you have two sharing options:
+
+    - **Live web URL**: a shareable link that always displays the most current data. Send this to investors for ongoing portfolio visibility — the page updates automatically as new telemetry arrives. No login required for recipients.
+    - **PDF download**: a point-in-time snapshot of the report, suitable for board packs, LP reporting, and archival.
+
+    To share a live web URL: after generating the report, click **Share → Copy Live URL** and send directly to the recipient.
+  </Step>
+</Steps>
+
+## Stakeholder Viewer Access
+
+If an investor or client needs ongoing visibility into portfolio performance — beyond a static report — you can grant them a read-only Viewer account directly in TerawattOS. Viewers see the portfolio dashboard, health cards, and reports, but cannot access configuration, alerts, or operational controls.
+
+To add a viewer:
+1. Navigate to **Settings → Access → Add Viewer**
+2. Enter the stakeholder's email address
+3. Select the portfolio or site scope they should have access to
+4. Click **Send Invite**
+
+The stakeholder receives an email invitation and can access their view immediately after accepting. No TerawattOS subscription is required for Viewer accounts.
+
+## ESG Data and Audit Requirements
+
+For sustainability teams using TerawattOS as a source of Scope 2 or Scope 1 reporting data, the ESG/Scope 2 report provides:
+
+<Accordion title="Data organization and chain of custody">
+  All data in the ESG report is organized by site and asset, with full timestamps from the source telemetry. Each data point includes the device serial number, asset ID, and measurement timestamp — providing an unbroken chain of custody from the physical asset to the report.
+
+  The report can be exported in both CSV (for integration with GHG calculation tools) and PDF (for submission or audit review).
+</Accordion>
+
+<Accordion title="Supported reporting frameworks">
+  TerawattOS ESG reports are structured to align with:
+
+  - **GHG Protocol** (Scope 1, 2, and 3 boundary definitions)
+  - **CDP** (Climate Change disclosure questionnaire data requirements)
+  - **TCFD** (Task Force on Climate-related Financial Disclosures)
+  - Regional and national reporting frameworks in target markets — including frameworks applicable to African regulatory environments
+
+  If your reporting framework requires a specific data format not currently supported, contact the Terawattos team to discuss a custom export.
+</Accordion>
+
+<Accordion title="Third-party audit suitability">
+  The ESG report is designed to withstand third-party audit scrutiny. Data gaps — for example, when a TerawattEDGE device was offline due to a site communication fault — are explicitly marked in the report with the gap duration and reason, rather than being filled with estimates or hidden in aggregates. This transparency is deliberate: auditors require evidence of data completeness, and unexplained gaps create compliance risk.
+</Accordion>
+
+<Note>
+  Reports pull directly from the TerawattOS telemetry database — there is no manual data entry step at any point in the reporting workflow. If a data gap exists because a device was offline, the gap is clearly marked in the report with a timestamp and duration. This ensures your reports are auditable and your investors have an accurate picture of portfolio performance.
+</Note>

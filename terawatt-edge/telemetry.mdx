@@ -1,0 +1,96 @@
+---
+title: "Understanding TerawattEDGE Live Telemetry Streams"
+sidebarTitle: "Telemetry"
+description: "Learn what data TerawattEDGE collects, how polling intervals work, how offline buffering protects your history, and how data is secured in transit."
+---
+
+TerawattEDGE streams live telemetry from your connected energy assets to TerawattOS every second. Every voltage reading, fault code, and state-of-charge value captured at the edge feeds directly into the dashboards, anomaly detection engine, and automated reporting that power your operational workflows — with no manual data collection, no CSV exports, and no gaps caused by connectivity interruptions.
+
+## Polling Intervals
+
+TerawattEDGE supports configurable polling intervals ranging from **1 second to 15 minutes**, depending on the asset type and your operational requirements. For assets where real-time visibility is critical — inverters, batteries, and grid-tied devices — the default interval is 1–5 seconds. For slower-moving parameters like ambient temperature sensors or cumulative energy counters, longer intervals reduce bandwidth consumption without sacrificing analytical value.
+
+You configure polling intervals per asset type in TerawattOS, and the Edge device applies them automatically at the next sync. No on-site visit or firmware change is required to adjust polling frequency.
+
+<Info>
+  Sub-second polling (up to 10 readings per second) is available for high-frequency applications such as BESS dispatch monitoring and grid frequency response tracking. Contact Terawattos to enable high-frequency mode on your account.
+</Info>
+
+## What Data TerawattEDGE Captures
+
+TerawattEDGE captures a comprehensive set of electrical, thermal, and operational parameters from connected assets. All readings are captured regardless of OEM — the device translates native register values into TerawattOS's normalized schema before transmission.
+
+### Standard Telemetry Parameters
+
+| Parameter | Description | Example Value |
+|---|---|---|
+| `voltage_ac_l1` | AC phase 1 voltage at the inverter output | 231.4 V |
+| `voltage_ac_l2` | AC phase 2 voltage (three-phase assets) | 230.8 V |
+| `voltage_ac_l3` | AC phase 3 voltage (three-phase assets) | 232.1 V |
+| `current_ac` | AC output current | 14.7 A |
+| `output_power_kw` | Real-time AC output power | 3.4 kW |
+| `state_of_charge_pct` | Battery state of charge (BESS assets) | 78.2 % |
+| `frequency_hz` | Grid frequency at point of connection | 50.01 Hz |
+| `fault_code` | Active fault register value from asset | 0x0042 |
+| `temperature_c` | Internal component or ambient temperature | 41.3 °C |
+| `dc_voltage` | DC bus voltage (PV string input) | 387.5 V |
+| `dc_current` | DC input current from PV string | 9.1 A |
+| `energy_today_kwh` | Cumulative energy generated today | 18.6 kWh |
+| `energy_total_kwh` | Lifetime cumulative energy generation | 12,847 kWh |
+
+In addition to these standard parameters, TerawattEDGE can poll **custom Modbus registers** defined by the asset manufacturer. You specify the register address, data type, and scaling factor in the TerawattOS device configuration, and the Edge device includes those readings in every telemetry packet.
+
+## Multi-Protocol Support
+
+A single TerawattEDGE dongle handles the full range of protocols used across the industry — you don't need a separate device or adapter for each OEM brand on your portfolio.
+
+<Tabs>
+  <Tab title="Modbus RTU">
+    The most widely used protocol for serial RS-485 connections. TerawattEDGE supports both standard and vendor-extended Modbus RTU implementations, with configurable baud rates (9600–115200), parity, and stop bits. Compatible with the vast majority of solar inverters, meters, and battery systems shipped since 2005.
+  </Tab>
+  <Tab title="Modbus TCP">
+    Ethernet-based Modbus for assets with RJ-45 or fiber network interfaces. Used with utility-scale inverters, advanced BMS platforms, and industrial metering equipment. TerawattEDGE connects to the asset's local network port and polls registers over TCP/IP — no RS-485 wiring required.
+  </Tab>
+  <Tab title="SunSpec">
+    The open SunSpec Alliance standard for interoperable solar and storage communications. TerawattEDGE auto-discovers SunSpec model blocks on the device and maps them to TerawattOS parameters — zero manual register mapping needed for SunSpec-certified equipment.
+  </Tab>
+  <Tab title="Proprietary OEM Protocols">
+    For inverters and BMS platforms that use proprietary communication protocols (SolarEdge, Huawei, Sungrow, Fronius, and others), TerawattEDGE includes pre-built OEM protocol handlers maintained and updated by Terawattos. These are applied automatically based on the detected device make and model during provisioning.
+  </Tab>
+</Tabs>
+
+## Offline-Resilient Buffering
+
+TerawattEDGE is built for environments where connectivity is unreliable. The device stores all telemetry to onboard flash storage **before** attempting transmission — so data is never lost if the network is unavailable at the moment of capture.
+
+When the 4G or WiFi connection drops:
+
+1. The device continues polling assets at the configured interval without interruption
+2. All readings are written to the local storage buffer with full timestamp fidelity
+3. The TerawattOS dashboard shows the device status as **Buffering** — clearly indicating that the view may not reflect the current moment
+4. When connectivity returns, the device transmits the buffered backlog in chronological order — restoring a complete, gap-free history in TerawattOS
+
+The onboard buffer holds up to **30 days** of telemetry at the default 5-second polling interval. For sites with higher polling frequencies, the buffer duration scales accordingly — the device prioritizes preserving the most recent data if storage approaches capacity.
+
+<Note>
+  TerawattEDGE follows an **offline-first design philosophy**: all telemetry is written to local storage first, then transmitted to the cloud — never the other way around. This guarantees data integrity in any connectivity environment, from stable fibre-connected industrial sites to remote off-grid mini-grids with intermittent 4G coverage.
+</Note>
+
+## Data Security in Transit
+
+Every byte of telemetry that leaves a TerawattEDGE device is protected:
+
+- **Transport encryption**: All data is transmitted over **MQTT with TLS 1.3** — the same encryption standard used by modern financial institutions. No telemetry travels unencrypted.
+- **Mutual device authentication**: Each TerawattEDGE device is provisioned with a unique X.509 certificate during manufacturing. The TerawattOS cloud validates this certificate on every connection — preventing unauthorized devices from injecting data into your account.
+- **No open ports**: TerawattEDGE initiates all connections outbound. There are no inbound-listening ports on the device, which eliminates an entire class of network intrusion vectors.
+- **Data isolation**: Telemetry from your devices is logically isolated from other tenants in the TerawattOS platform. Cross-account data access is not possible by design.
+
+## Data Normalization
+
+Raw telemetry from different OEM devices uses different register addresses, units, scaling factors, and naming conventions. TerawattEDGE normalizes all incoming data to **TerawattOS's common asset data schema** before transmitting it to the cloud. This means:
+
+- A SolarEdge inverter and a Huawei inverter appear with identical field names in the dashboard
+- Computed metrics (efficiency ratios, specific yield, performance ratio) are calculated consistently across all OEMs
+- Custom dashboards, alert rules, and API integrations you build work across your entire portfolio — regardless of which hardware is installed at each site
+
+Normalization happens at the edge layer, so the TerawattOS platform never receives raw proprietary data formats — only clean, schema-conformant telemetry records.

@@ -1,0 +1,382 @@
+---
+title: "REST API and Webhooks for Terawattos Integrations"
+sidebarTitle: "API & Webhooks"
+description: "Connect your own tools and systems to TerawattOS using the REST API for data queries and webhooks for real-time event-driven notifications."
+---
+
+TerawattOS exposes a REST API and a webhook system so you can integrate live telemetry, asset data, work orders, and event notifications into your own applications, dashboards, and workflows. Whether you're pulling data into a BI tool, pushing alerts into your ticketing system, or building a custom portfolio dashboard, the API gives you full programmatic access to everything in TerawattOS.
+
+## REST API
+
+### Authentication
+
+All API requests must include your API key as a Bearer token in the `Authorization` header. You can generate and manage API keys from **TerawattOS → Settings → API Keys**.
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+API keys are scoped per organization. All requests are made over HTTPS — plain HTTP requests are rejected.
+
+### Base URL
+
+```
+https://api.terawattos.com/v1
+```
+
+### Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/sites` | List all sites in your portfolio |
+| `GET` | `/sites/{siteId}/assets` | List all assets at a specific site |
+| `GET` | `/assets/{assetId}/telemetry` | Get the latest telemetry snapshot for an asset |
+| `GET` | `/assets/{assetId}/telemetry/history` | Get historical telemetry with time range filtering |
+| `GET` | `/work-orders` | List all work orders (supports status and site filters) |
+| `POST` | `/work-orders` | Create a new work order |
+| `GET` | `/alerts` | List all active alerts across your portfolio |
+
+### Example: List Sites
+
+**Request**
+
+```http
+GET /v1/sites
+Authorization: Bearer YOUR_API_KEY
+```
+
+**Response**
+
+```json
+{
+  "data": [
+    {
+      "id": "site_01j3kx8m4n",
+      "name": "Nairobi North Solar Farm",
+      "location": {
+        "country": "KE",
+        "region": "Nairobi County",
+        "coordinates": { "lat": -1.2861, "lng": 36.8219 }
+      },
+      "capacity_kw": 2400,
+      "asset_count": 18,
+      "status": "online",
+      "last_seen": "2025-07-14T11:42:00Z"
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "page": 1,
+    "per_page": 50
+  }
+}
+```
+
+<ResponseField name="id" type="string">
+  Unique identifier for the site. Use this in subsequent requests to `/sites/{siteId}/assets`.
+</ResponseField>
+
+<ResponseField name="capacity_kw" type="number">
+  Installed generation or storage capacity at the site in kilowatts.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current site connectivity status. One of `online`, `degraded`, `offline`, or `maintenance`.
+</ResponseField>
+
+### Example: Get Asset Telemetry
+
+**Request**
+
+```http
+GET /v1/assets/asset_7f2c9b1a/telemetry
+Authorization: Bearer YOUR_API_KEY
+```
+
+**Response**
+
+```json
+{
+  "asset_id": "asset_7f2c9b1a",
+  "asset_type": "solar_inverter",
+  "oem": "SMA",
+  "timestamp": "2025-07-14T11:42:05Z",
+  "telemetry": {
+    "ac_power_kw": 147.3,
+    "ac_voltage_v": 231.8,
+    "ac_current_a": 63.5,
+    "dc_power_kw": 152.1,
+    "energy_today_kwh": 841.2,
+    "energy_total_kwh": 128430.7,
+    "temperature_c": 47.2,
+    "status": "producing",
+    "fault_code": null
+  }
+}
+```
+
+<ResponseField name="ac_power_kw" type="number">
+  Current AC output power in kilowatts. Normalized across all OEMs into a consistent field name.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Operational status of the asset. One of `producing`, `standby`, `fault`, `offline`, or `curtailed`.
+</ResponseField>
+
+<ResponseField name="fault_code" type="string | null">
+  Active fault code if the asset is in a fault state, mapped to TerawattOS's normalized fault taxonomy. `null` when no fault is active.
+</ResponseField>
+
+### Example: Get Historical Telemetry
+
+Retrieve time-series telemetry for an asset by specifying a `start` and `end` timestamp in ISO 8601 format, and an optional `interval` for data aggregation.
+
+**Request**
+
+```http
+GET /v1/assets/asset_7f2c9b1a/telemetry/history?start=2025-07-13T00:00:00Z&end=2025-07-14T00:00:00Z&interval=15m
+Authorization: Bearer YOUR_API_KEY
+```
+
+<ParamField query="start" type="string" required>
+  Start of the time range in ISO 8601 format (UTC). Example: `2025-07-13T00:00:00Z`
+</ParamField>
+
+<ParamField query="end" type="string" required>
+  End of the time range in ISO 8601 format (UTC). Must be after `start`. Maximum range is 90 days per request.
+</ParamField>
+
+<ParamField query="interval" type="string">
+  Aggregation interval for returned data points. Accepted values: `1m`, `5m`, `15m`, `1h`, `1d`. Defaults to `5m` if omitted.
+</ParamField>
+
+<ParamField query="fields" type="string">
+  Comma-separated list of telemetry fields to include. If omitted, all available fields are returned. Example: `ac_power_kw,energy_today_kwh`
+</ParamField>
+
+### Example: Create a Work Order
+
+**Request**
+
+```http
+POST /v1/work-orders
+Authorization: Bearer YOUR_API_KEY
+Content-Type: application/json
+
+{
+  "site_id": "site_01j3kx8m4n",
+  "asset_id": "asset_7f2c9b1a",
+  "title": "Inverter string fault investigation",
+  "priority": "high",
+  "assigned_to": "user_9a3d2c",
+  "due_date": "2025-07-18T00:00:00Z",
+  "notes": "String 3 reporting consistent underperformance. Suspected shading or connection issue."
+}
+```
+
+<ParamField body="site_id" type="string" required>
+  The ID of the site where the work order applies.
+</ParamField>
+
+<ParamField body="priority" type="string">
+  Work order priority. One of `low`, `medium`, `high`, or `critical`. Defaults to `medium`.
+</ParamField>
+
+<ParamField body="assigned_to" type="string">
+  TerawattOS user ID of the technician to assign the work order to. If omitted, the work order is created unassigned.
+</ParamField>
+
+---
+
+## Webhooks
+
+### What Triggers a Webhook
+
+TerawattOS fires webhook events when key platform events occur. You can subscribe to any combination of the following event types:
+
+| Event Type | Triggered When |
+|---|---|
+| `fault.detected` | An asset enters a fault state |
+| `alert.triggered` | A configured alert threshold is crossed |
+| `alert.resolved` | An active alert returns to normal |
+| `work_order.created` | A new work order is created |
+| `work_order.closed` | A work order is marked as completed |
+| `asset.offline` | An asset stops reporting telemetry |
+| `asset.online` | A previously offline asset resumes reporting |
+
+### Webhook Payload Structure
+
+Every webhook delivery sends a JSON body with a consistent envelope structure:
+
+```json
+{
+  "event_type": "fault.detected",
+  "event_id": "evt_4c8f2a91b3",
+  "timestamp": "2025-07-14T11:44:22Z",
+  "site_id": "site_01j3kx8m4n",
+  "asset_id": "asset_7f2c9b1a",
+  "data": {
+    "fault_code": "INV_OVERHEAT",
+    "fault_description": "Inverter internal temperature exceeded threshold (89°C)",
+    "severity": "high",
+    "asset_name": "Inverter 07 - Block A",
+    "asset_type": "solar_inverter"
+  }
+}
+```
+
+### Registering a Webhook Endpoint
+
+<Steps>
+  <Step title="Open Webhook Settings">
+    In TerawattOS, go to **Settings → Integrations → Webhooks** and click **Add Endpoint**.
+  </Step>
+  <Step title="Enter Your Endpoint URL">
+    Provide the HTTPS URL where TerawattOS should deliver events. The endpoint must return a `2xx` HTTP status to acknowledge receipt.
+  </Step>
+  <Step title="Select Event Types">
+    Choose which event types should trigger deliveries to this endpoint. You can add multiple endpoints with different event subscriptions.
+  </Step>
+  <Step title="Copy Your Signing Secret">
+    TerawattOS generates a unique HMAC signing secret for each endpoint. Copy this value — you'll use it to verify incoming payloads on your server.
+  </Step>
+</Steps>
+
+### Verifying Webhook Signatures
+
+Every webhook delivery includes a `X-Terawatt-Signature` header containing an HMAC-SHA256 signature of the raw request body, signed with your endpoint's secret. Always verify this signature before processing any webhook payload.
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    import hmac
+    import hashlib
+
+    def verify_terawatt_signature(payload_body: bytes, signature_header: str, secret: str) -> bool:
+        """
+        Verify the HMAC-SHA256 signature on an incoming Terawatt webhook.
+
+        Args:
+            payload_body: The raw request body as bytes.
+            signature_header: The value of the X-Terawatt-Signature header.
+            secret: Your endpoint's signing secret from the TerawattOS dashboard.
+
+        Returns:
+            True if the signature is valid, False otherwise.
+        """
+        expected_signature = hmac.new(
+            key=secret.encode("utf-8"),
+            msg=payload_body,
+            digestmod=hashlib.sha256
+        ).hexdigest()
+
+        return hmac.compare_digest(expected_signature, signature_header)
+
+
+    # Example usage in a Flask route
+    from flask import Flask, request, abort
+    import json
+
+    app = Flask(__name__)
+    WEBHOOK_SECRET = "your_signing_secret_from_dashboard"
+
+    @app.route("/webhook/terawatt", methods=["POST"])
+    def handle_webhook():
+        signature = request.headers.get("X-Terawatt-Signature", "")
+        if not verify_terawatt_signature(request.data, signature, WEBHOOK_SECRET):
+            abort(401)
+
+        event = request.get_json()
+        print(f"Received event: {event['event_type']} for asset {event.get('asset_id')}")
+        return "", 200
+    ```
+  </Tab>
+  <Tab title="Node.js">
+    ```javascript
+    const crypto = require("crypto");
+
+    /**
+     * Verify the HMAC-SHA256 signature on an incoming Terawatt webhook.
+     *
+     * @param {Buffer} payloadBody - The raw request body as a Buffer.
+     * @param {string} signatureHeader - The value of the X-Terawatt-Signature header.
+     * @param {string} secret - Your endpoint's signing secret from the TerawattOS dashboard.
+     * @returns {boolean} True if the signature is valid.
+     */
+    function verifyTerawattSignature(payloadBody, signatureHeader, secret) {
+      const expectedSignature = crypto
+        .createHmac("sha256", secret)
+        .update(payloadBody)
+        .digest("hex");
+
+      return crypto.timingSafeEqual(
+        Buffer.from(expectedSignature, "hex"),
+        Buffer.from(signatureHeader, "hex")
+      );
+    }
+
+    // Example usage with Express
+    const express = require("express");
+    const app = express();
+
+    const WEBHOOK_SECRET = "your_signing_secret_from_dashboard";
+
+    app.post("/webhook/terawatt", express.raw({ type: "application/json" }), (req, res) => {
+      const signature = req.headers["x-terawatt-signature"] || "";
+
+      if (!verifyTerawattSignature(req.body, signature, WEBHOOK_SECRET)) {
+        return res.status(401).send("Invalid signature");
+      }
+
+      const event = JSON.parse(req.body.toString());
+      console.log(`Received event: ${event.event_type} for asset ${event.asset_id}`);
+      res.status(200).send("OK");
+    });
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>
+  Always use a timing-safe comparison function (`hmac.compare_digest` in Python, `crypto.timingSafeEqual` in Node.js) when comparing signatures. Standard string equality checks are vulnerable to timing attacks.
+</Warning>
+
+### Retry Behavior
+
+If your endpoint returns a non-`2xx` status code, or fails to respond within 10 seconds, TerawattOS marks the delivery as failed and retries with exponential backoff. The retry schedule is:
+
+| Attempt | Delay After Previous Failure |
+|---|---|
+| 1st retry | 30 seconds |
+| 2nd retry | 2 minutes |
+| 3rd retry | 10 minutes |
+| 4th retry | 1 hour |
+| 5th retry | 6 hours |
+| 6th retry | 24 hours |
+
+TerawattOS continues retrying for up to **72 hours** from the original delivery attempt. After 72 hours, the delivery is marked as permanently failed and logged in **Settings → Integrations → Webhooks → Delivery History** for manual review.
+
+---
+
+## Rate Limits
+
+The TerawattOS REST API enforces a limit of **1,000 requests per minute** per API key. Every API response includes rate limit headers:
+
+| Header | Description |
+|---|---|
+| `X-RateLimit-Limit` | Total requests allowed per minute for your API key |
+| `X-RateLimit-Remaining` | Requests remaining in the current minute window |
+| `X-RateLimit-Reset` | Unix timestamp when the current window resets |
+
+When you exceed the limit, the API returns `429 Too Many Requests`. Back off and retry after the time indicated in `X-RateLimit-Reset`.
+
+```http
+HTTP/1.1 429 Too Many Requests
+X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1752489720
+Retry-After: 47
+```
+
+<Note>
+  For high-volume DER telemetry integration — such as utility portfolios ingesting data from thousands of assets at sub-minute intervals — the standard REST API polling pattern may not be the most efficient architecture. See the [SCADA & EMS Integration](/integrations/scada-ems) page for the recommended integration approach for large-scale and utility deployments.
+</Note>

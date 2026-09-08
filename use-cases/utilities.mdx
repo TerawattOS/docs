@@ -1,0 +1,120 @@
+---
+title: "TerawattOS for Utilities and DER Grid Management"
+sidebarTitle: "Utilities"
+description: "How utilities use TerawattOS to aggregate, monitor, and dispatch distributed energy resources across thousands of solar, storage, and generation assets in real time."
+---
+
+As distributed energy resources proliferate across the grid, utilities need a scalable, integration-ready platform to aggregate, monitor, and dispatch distributed solar, storage, and generation assets in real time. TerawattOS provides the universal protocol layer, open API architecture, and enterprise-grade telemetry infrastructure to bring thousands of heterogeneous DER assets under a single operational view — and integrate that view directly with your existing EMS and SCADA systems.
+
+## The Challenges TerawattOS Solves
+
+<Accordion title="DER visibility gaps across the distribution network">
+  Thousands of distributed assets — residential solar, commercial batteries, small-scale generation — connect to the grid without providing real-time telemetry to the utility. This makes dispatch, load forecasting, curtailment management, and grid balancing increasingly unreliable as DER penetration grows. TerawattOS provides real-time visibility into enrolled DER assets at sub-second polling intervals, giving your operations centre the situational awareness that grid management requires.
+</Accordion>
+
+<Accordion title="Protocol fragmentation across manufacturers">
+  Solar inverters, battery systems, and smart meters from dozens of manufacturers each speak different communication protocols — Modbus, SunSpec, DNP3, IEC 61850, OCPP — with no unified data layer between them. Building custom protocol adapters for every device type is expensive, brittle, and impossible to maintain at scale. TerawattOS normalizes data from every major DER manufacturer through a single universal adapter layer.
+</Accordion>
+
+<Accordion title="SCADA integration that requires expensive custom work">
+  Connecting DER data streams to existing EMS, SCADA, or forecasting platforms typically requires custom middleware that takes months to build and is tightly coupled to specific device types or firmware versions. Every new DER category means new integration work. TerawattOS exposes a stable REST API and webhook infrastructure that connects to your existing systems once, regardless of what assets are enrolled downstream.
+</Accordion>
+
+<Accordion title="Growing regulatory reporting obligations">
+  Grid operators and energy regulators increasingly require utilities to report on enrolled DER capacity, real-time availability, and metered output — with audit trails and digital signatures that can withstand regulatory scrutiny. Assembling this data manually from disparate systems is not sustainable as DER volumes grow. TerawattOS automates the reporting pipeline from asset telemetry to submission-ready regulatory output.
+</Accordion>
+
+## Key Features for Utilities
+
+<CardGroup cols={2}>
+  <Card title="Universal Protocol Adapter" icon="plug">
+    Modbus RTU/TCP, SunSpec, DNP3, IEC 61850, and OCPP — all normalized into the TerawattOS data model. Every major DER manufacturer is supported out of the box, with no custom integration work required per device type.
+  </Card>
+  <Card title="Open API Architecture" icon="code">
+    Integrate TerawattOS into your EMS, SCADA, or grid forecasting platform via a stable REST API and webhooks. Stream live DER telemetry, receive real-time alerts, and trigger dispatch signals from your existing operational systems.
+  </Card>
+  <Card title="Virtual Power Plant Visibility" icon="network-wired">
+    Aggregate available capacity, real-time availability status, and live output data from all enrolled DER assets. This consolidated view is the operational foundation for VPP dispatch programs, demand response schemes, and grid balancing services.
+  </Card>
+  <Card title="Regulatory Data Pipeline" icon="file-contract">
+    Automated DER reporting for grid operator submissions, with complete audit trails and digital signatures on all output data. Configure reporting schedules, submission formats, and data validation rules to meet your specific regulatory obligations.
+  </Card>
+  <Card title="Enterprise Scale" icon="server">
+    10,000+ concurrent assets supported at 14ms average data latency. TerawattOS cloud infrastructure maintains data quality, low latency, and high availability at full DER fleet scale — including burst capacity during grid events.
+  </Card>
+  <Card title="DER Dispatch and Control" icon="sliders">
+    Issue charge/discharge schedules to enrolled battery assets, curtailment signals to solar inverters, and load control commands to smart devices. All dispatch actions are logged with timestamps and confirmation receipts for regulatory and operational accountability.
+  </Card>
+</CardGroup>
+
+## Integration Architecture
+
+<Tabs>
+  <Tab title="REST API">
+    TerawattOS exposes a fully documented REST API covering asset telemetry, fleet status, alert streams, dispatch commands, and reporting endpoints. Your EMS or SCADA system authenticates once with an API key and can query live DER data or push dispatch commands at any polling interval your operations require.
+
+    ```json
+    GET /v1/assets/{asset_id}/telemetry
+    Authorization: Bearer <api_key>
+
+    {
+      "asset_id": "inv-0042",
+      "timestamp": "2025-07-14T10:23:01.412Z",
+      "active_power_kw": 147.3,
+      "reactive_power_kvar": 12.1,
+      "voltage_v": 415.2,
+      "frequency_hz": 50.01,
+      "state": "generating"
+    }
+    ```
+  </Tab>
+  <Tab title="Webhooks">
+    Subscribe to real-time event webhooks for alert triggers, asset state changes, dispatch confirmations, and telemetry threshold breaches. TerawattOS posts structured JSON payloads to your endpoint within milliseconds of the event — no polling required for time-sensitive grid signals.
+
+    ```json
+    POST https://your-ems.example.com/terawatt-events
+    Content-Type: application/json
+
+    {
+      "event": "asset.state_change",
+      "asset_id": "bess-0017",
+      "previous_state": "charging",
+      "new_state": "discharging",
+      "triggered_by": "dispatch_schedule",
+      "timestamp": "2025-07-14T16:00:00.003Z"
+    }
+    ```
+  </Tab>
+  <Tab title="SCADA / DNP3">
+    For utilities operating DNP3-based SCADA environments, TerawattOS acts as a DNP3 master station, polling DER assets and making normalized data available to your SCADA outstation via standard DNP3 data objects. No changes to your existing SCADA infrastructure are required — TerawattOS bridges the protocol gap at the asset layer.
+  </Tab>
+</Tabs>
+
+## Virtual Power Plant Operations
+
+TerawattOS provides the real-time visibility and dispatch infrastructure to operate enrolled DER assets as a coordinated Virtual Power Plant.
+
+<Steps>
+  <Step title="Enroll assets">
+    Register DER assets — residential solar, commercial BESS, small-scale generation — into TerawattOS via TerawattEDGE or direct API integration. Each asset begins streaming live telemetry immediately after commissioning.
+  </Step>
+  <Step title="Aggregate fleet capacity">
+    The VPP dashboard shows total enrolled capacity, real-time availability (assets that are online, responsive, and within dispatch parameters), and current aggregate output — updated every second.
+  </Step>
+  <Step title="Issue dispatch signals">
+    From the TerawattOS dispatch console or via API, send coordinated charge/discharge or curtailment instructions to targeted asset groups. Signals are delivered and confirmed within the sub-second latency window that ancillary services and demand response programs require.
+  </Step>
+  <Step title="Record and report">
+    Every dispatch event, asset response, and deviation from instruction is logged with full timestamps and audit trails. Generate dispatch performance reports for grid operator settlement, regulatory submissions, or internal performance review.
+  </Step>
+</Steps>
+
+## Scale and Reliability
+
+<Info>
+  TerawattOS supports **10,000+ concurrent assets** at **14ms average data latency**. Enterprise-grade cloud infrastructure maintains data quality and availability at full fleet scale — including during grid events when telemetry volume spikes and low-latency dispatch matters most.
+</Info>
+
+<Note>
+  Terawattos' grid integration team provides dedicated onboarding support for utility-scale deployments. Your first 50 assets can be streaming live data to TerawattOS within two weeks — regardless of the OEM mix or communication protocols in use. From there, fleet expansion follows a structured rollout plan your operations team controls.
+</Note>

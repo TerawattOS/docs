@@ -1,0 +1,80 @@
+---
+title: "OEM Compatibility: Connect Any Energy Asset to Terawattos"
+sidebarTitle: "OEM Compatibility"
+description: "TerawattOS is vendor-agnostic by design — monitor assets from any OEM in one unified platform, normalized into a single consistent data schema."
+---
+
+TerawattOS is built to work with any energy asset, regardless of who made it. Rather than locking you into a single vendor's ecosystem, TerawattOS uses the TerawattEDGE universal protocol adapter to pull data from any OEM and normalize it into a single, consistent view across your entire portfolio.
+
+## The Problem with OEM-Specific Monitoring
+
+Every inverter manufacturer ships its own monitoring portal. SolarEdge has one dashboard, SMA has another, Huawei has a third — and none of them talk to each other. For operators managing a mixed-OEM portfolio, this means logging into multiple platforms, reconciling incompatible data formats, and building custom integrations just to see your whole fleet in one place.
+
+TerawattOS solves this by sitting above the OEM layer entirely. TerawattEDGE connects directly to your hardware using the asset's native protocol, and TerawattOS normalizes all incoming data into a common schema before it ever appears in your dashboard. The result: one platform, one login, one view — regardless of how many vendors are in your portfolio.
+
+## Supported Asset Types
+
+TerawattOS monitors and manages the full range of distributed renewable energy and flexibility assets:
+
+<CardGroup cols={2}>
+  <Card title="Solar PV Inverters" icon="solar-panel">
+    String inverters, central inverters, and microinverters from all major manufacturers. Full MPPT visibility, string-level diagnostics, and yield tracking normalized across all OEMs.
+  </Card>
+  <Card title="Battery Storage (BESS)" icon="battery-full">
+    Utility-scale and commercial battery energy storage systems. Monitor state of charge, cycle counts, cell temperatures, and dispatch charge/discharge schedules directly from TerawattOS.
+  </Card>
+  <Card title="EV Charging Infrastructure" icon="charging-station">
+    Commercial and fleet EV charging stations monitored via OCPP. Track session data, power draw, uptime, and faults across your entire charging network from a single dashboard.
+  </Card>
+  <Card title="Hybrid & Multi-Source Sites" icon="bolt">
+    Solar-plus-storage, wind-plus-solar, CHP, and other hybrid configurations are natively supported. TerawattOS models the full site topology so you see generation, storage, and load in one unified view.
+  </Card>
+</CardGroup>
+
+Beyond these core asset classes, TerawattOS also supports **wind turbines**, **utility meters**, **combined heat and power (CHP) systems**, and any asset that exposes a communication interface via a supported protocol.
+
+## Named OEM Integrations
+
+TerawattOS has pre-built integrations for the most widely deployed OEMs in the market today, including:
+
+- **SolarEdge** — inverters and energy hubs, including SolarEdge monitoring portal bypass for direct Modbus/SunSpec integration
+- **SMA** — Sunny Boy, Sunny Tripower, and SMA storage solutions
+- **Huawei** — SUN2000 series inverters and LUNA2000 battery systems
+- Any asset that communicates over **Modbus RTU/TCP**, **SunSpec**, **DNP3**, **IEC 61850**, or **OCPP**
+
+Pre-built integrations mean zero custom mapping required on your side. TerawattEDGE ships with protocol drivers for these OEMs out of the box.
+
+## Multi-Vendor Asset Registry
+
+Every asset connected to TerawattOS is registered in a centralized, normalized asset register — regardless of vendor. From the asset registry you can:
+
+- View all assets across all sites and all OEMs in a single list
+- Filter by asset type, OEM, site, status, or commission date
+- Attach documentation (datasheets, warranties, service records) directly to any asset record
+- Track the full lifecycle history of each asset — faults, work orders, performance trends, and firmware versions — in one place
+
+Because the registry is OEM-agnostic, you manage one source of truth for your entire fleet, not one per vendor.
+
+## Asset-Agnostic Data Normalization
+
+When TerawattEDGE reads data from your assets, it translates every OEM's proprietary data model into TerawattOS's common telemetry schema before streaming it to the platform. This means:
+
+- Inverter output power is always labeled `ac_power_kw`, whether it came from SolarEdge or SMA
+- Battery state of charge is always `soc_pct`, whether it came from Huawei or a white-label BESS
+- Fault codes are mapped to a standardized severity taxonomy so alerts fire consistently across vendors
+
+You write alerts, build reports, and configure dashboards using consistent field names — no per-vendor logic required.
+
+## Adding a New OEM
+
+When you onboard to TerawattOS, the Terawatt team configures TerawattEDGE for your specific asset mix during the initial deployment. Most integrations — including multi-OEM sites — are fully configured and streaming live data within **2–5 business days**.
+
+The configuration process includes:
+1. Identifying all asset types and OEMs at each site
+2. Selecting the correct protocol driver for each asset class
+3. Deploying and commissioning TerawattEDGE hardware on-site
+4. Validating data quality and schema normalization before go-live
+
+<Note>
+  If you have an asset type or OEM not covered by the standard integration library, contact the Terawatt team. Custom protocol adapters can be developed for proprietary or legacy equipment — typical delivery time is **2–4 weeks** depending on protocol complexity and manufacturer documentation availability.
+</Note>

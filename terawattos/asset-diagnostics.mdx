@@ -1,0 +1,114 @@
+---
+title: "Automated Asset Diagnostics and Fault Detection"
+sidebarTitle: "Diagnostics"
+description: "TerawattOS uses AI-powered diagnostics to detect faults, surface root causes in under 5 minutes, and quantify revenue impact across your fleet."
+---
+
+TerawattOS diagnostics continuously analyze the performance of every connected asset in your portfolio — comparing actual output against weather-adjusted expected output baselines, detecting deviations, and surfacing root causes before yield loss compounds. Where manual methods typically leave a fault undetected for hours, the diagnostics engine surfaces the root cause in under 5 minutes and routes the finding directly to your operations team.
+
+## How Diagnostics Work
+
+The diagnostics engine runs continuously in the background against all live telemetry streams. It does not wait for a threshold breach to start looking for problems — it monitors the full performance signature of each asset and flags statistically significant deviations from expected behavior.
+
+<Steps>
+  <Step title="Baseline Calculation">
+    For each asset and site, TerawattOS builds a performance baseline using historical telemetry, installed capacity (kWp), and real-time weather data including irradiance, temperature, and wind speed. The baseline defines what healthy output looks like under current conditions.
+  </Step>
+  <Step title="Continuous Performance Comparison">
+    Live telemetry is compared against the baseline in real time. The engine calculates the gap between actual and expected output at the asset, string, and portfolio level — every second, for every connected device.
+  </Step>
+  <Step title="Anomaly Detection and Classification">
+    When a deviation exceeds learned thresholds, the diagnostics engine classifies the event by type — inverter fault, string underperformance, battery degradation, communication loss, or grid anomaly — using pattern-matching against a library of known fault signatures.
+  </Step>
+  <Step title="Root-Cause Attribution">
+    The engine correlates the anomaly with fault codes from the device, peer-asset performance, weather data, and site history to attribute a root cause. This surfaces in the dashboard as a plain-language finding — not just a raw fault code from the manufacturer.
+  </Step>
+  <Step title="Work Order or Alert Generation">
+    Confirmed diagnostics trigger an alert and, where configured, auto-generate a work order routed to the appropriate field team — with asset history, fault codes, and diagnostic notes pre-attached.
+  </Step>
+</Steps>
+
+## Issue Types Detected
+
+TerawattOS diagnostics cover the full range of failures and degradation modes common across solar PV, BESS, and hybrid sites:
+
+<CardGroup cols={2}>
+  <Card title="String Underperformance" icon="solar-panel">
+    Detect individual strings producing below expected current due to soiling, shading, module mismatch, or connection faults. The engine isolates the underperforming string within the inverter and quantifies the associated yield loss.
+  </Card>
+  <Card title="Inverter Communication Faults" icon="wifi">
+    Identify inverters that have dropped off the telemetry stream or are returning incomplete data. Distinguish between genuine communication failures and scheduled maintenance windows to avoid false positives.
+  </Card>
+  <Card title="Battery Cycle Degradation" icon="battery-half">
+    Track BESS state-of-health trends over time. Flag cells or modules showing accelerated capacity fade, abnormal charge/discharge curves, or thermal anomalies that indicate emerging degradation before a failure occurs.
+  </Card>
+  <Card title="Voltage and Grid Anomalies" icon="bolt">
+    Detect voltage deviations, frequency excursions, grid outages, and anti-islanding events at the meter and inverter level. Automatically distinguish between utility-side interruptions and site-side faults.
+  </Card>
+  <Card title="Shading and Soiling Losses" icon="cloud-sun">
+    Identify recurring, time-of-day-specific underperformance patterns consistent with shading from nearby structures or vegetation, or gradual yield degradation from module soiling. Quantify the cleaning or trimming ROI.
+  </Card>
+  <Card title="Scheduled vs. Unplanned Downtime" icon="calendar">
+    Separate planned maintenance windows from unplanned faults in availability calculations. Downtime events logged against a work order are classified as scheduled; all other losses are attributed to unplanned fault categories.
+  </Card>
+</CardGroup>
+
+## Asset Health Scores
+
+Every connected asset in TerawattOS carries a continuously updated health score, visible on the site dashboard and in the portfolio summary view. The health score is a normalized 0–100 index derived from:
+
+- Current fault state and severity
+- Rolling availability over the past 30 days
+- Performance ratio vs. fleet benchmark
+- Trend direction (improving, stable, or degrading)
+
+Health scores give operations managers an at-a-glance prioritization queue. Assets scoring below 70 are flagged in the dashboard and surfaced in the daily diagnostics digest sent to your team.
+
+## Fault Code Normalization
+
+Every fault code returned by every connected device — across all OEM brands and communication protocols — is captured by TerawattOS and translated into a normalized fault taxonomy. This means:
+
+- You see the same fault classification language whether the asset is a SolarEdge inverter, a Huawei BESS, or a third-party meter
+- Fault history is searchable across your entire fleet using consistent terminology
+- Cross-asset correlation is possible — for example, identifying that a specific fault code appears across all inverters of a given model running a specific firmware version
+
+The raw manufacturer fault codes are always preserved alongside the normalized classification, so your technical team retains full access to OEM-specific detail when needed.
+
+## Yield Loss Attribution
+
+For every detected fault or downtime event, TerawattOS quantifies the revenue impact by calculating the energy that was not generated during the event window — compared to the weather-adjusted expected output baseline.
+
+Yield loss is broken down by category:
+
+<Accordion title="Curtailment">
+  Generation curtailed due to grid operator instructions, export limits, or inverter clipping above the system's export cap. Curtailment losses are tracked separately from fault losses for accurate performance reporting and contract compliance.
+</Accordion>
+
+<Accordion title="Fault-Driven Losses">
+  Energy not generated due to inverter faults, string failures, BESS unavailability, or communication-driven shutdowns. Each fault event is assigned a kWh loss value and a revenue equivalent based on the applicable tariff or PPA rate.
+</Accordion>
+
+<Accordion title="Grid Outage Losses">
+  Generation lost due to utility grid interruptions outside your control. Grid outages are distinguished from site-side faults using voltage and frequency data at the meter — important for force majeure clauses in O&M and PPA contracts.
+</Accordion>
+
+<Accordion title="Scheduled Maintenance Losses">
+  Planned downtime for preventive maintenance, cleaning, or inspections. These losses are logged against a closed work order and excluded from unplanned availability calculations.
+</Accordion>
+
+## Integration with Work Orders
+
+When the diagnostics engine confirms a fault, it can automatically generate a work order in the [Work Order Management](/terawattos/work-orders) module. The auto-generated work order includes:
+
+- Fault type and root-cause summary from the diagnostics engine
+- Affected asset identifier and site location
+- Fault code (normalized and OEM-native)
+- Estimated yield loss since fault onset
+- Relevant asset history and previous work order summaries
+- Links to OEM documentation for the identified fault type
+
+This means your field technician arrives at the site already briefed — no back-and-forth between operations managers and field staff to diagnose what the problem is before planning a visit.
+
+<Tip>
+  Pair TerawattOS diagnostics with TerawattEDGE system control capabilities to resolve certain fault types remotely — inverter restarts, MPPT resets, and communication resets can often be executed from the platform without dispatching a technician. Operators using remote resolution report 60% fewer unnecessary truck rolls compared to purely reactive O&M workflows.
+</Tip>

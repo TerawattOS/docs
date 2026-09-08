@@ -1,0 +1,117 @@
+---
+title: "Install TerawattEDGE at Your Energy Site"
+sidebarTitle: "Installation"
+description: "Step-by-step guide to physically connecting, provisioning, and verifying a TerawattEDGE dongle at any energy site in under 10 minutes."
+---
+
+TerawattEDGE is designed to be installed by a field technician — or even a site facilities manager — without specialist integration knowledge. The entire process, from unpacking to live data streaming, takes under 10 minutes for a single-asset site. For multi-inverter sites, the commissioning wizard in the TerawattOS mobile app walks you through each asset in sequence.
+
+## Before You Start
+
+Make sure you have the following ready before arriving on site:
+
+<CardGroup cols={2}>
+  <Card title="TerawattOS Account" icon="user-check">
+    You need an active TerawattOS account with at least one site created. If you haven't set up your account yet, complete the onboarding in the web portal before heading to site.
+  </Card>
+  <Card title="TerawattEDGE Dongle" icon="microchip">
+    The physical device, shipped in the TerawattEDGE kit. Confirm the QR code label on the device is undamaged — you'll scan it during provisioning.
+  </Card>
+  <Card title="RS-485 Cable" icon="cable-car">
+    An RS-485 (2-wire or 4-wire) cable long enough to reach from the asset's communications port to your chosen mounting location for the TerawattEDGE device.
+  </Card>
+  <Card title="Asset Communications Access" icon="door-open">
+    Access to the inverter, battery, or meter's RS-485 Modbus port. Confirm the asset is powered on and that the communications port is not already occupied by a legacy data logger.
+  </Card>
+</CardGroup>
+
+## Installation Steps
+
+<Steps>
+  <Step title="Connect TerawattEDGE to the Asset">
+    Run the RS-485 cable from the asset's communications port to the TerawattEDGE dongle. Connect the cable to the RS-485 terminals on the TerawattEDGE — observe polarity markings (A+/B−) printed on the device housing.
+
+    TerawattEDGE supports **Modbus RTU**, **Modbus TCP**, **SunSpec**, and a wide range of proprietary OEM protocols — including SolarEdge, SMA, Huawei, and Fronius — out of the box. You do not need to set a static IP address or configure baud rates manually; the mobile app handles protocol detection automatically during provisioning.
+
+    Once the cable is connected, mount the device on a DIN rail inside the electrical panel or secure it in a suitable enclosure near the asset. The device is rated for standard indoor electrical room environments.
+
+    <Warning>
+      Always connect the RS-485 cable **before** powering the TerawattEDGE device. Hot-plugging communication cables into a powered device may trigger a firmware reset, requiring you to re-provision the unit from scratch.
+    </Warning>
+  </Step>
+
+  <Step title="Apply Power to the Device">
+    Connect the TerawattEDGE to its power source — either the included 12V DC adapter or the DIN-rail power tap, depending on your kit configuration. The device powers on immediately; you will see the LED indicator cycle through a startup sequence (blue flash → solid amber) within 10 seconds.
+
+    The device does not require a network connection to power on. It will begin local data polling as soon as it detects a valid RS-485 signal from the connected asset.
+  </Step>
+
+  <Step title="Provision to Your TerawattOS Account">
+    Open the **TerawattOS mobile app** on your phone or tablet. Navigate to **Sites → Add Device**, then tap **Scan QR Code** and point your camera at the QR code on the TerawattEDGE label.
+
+    The app authenticates the device against the TerawattOS cloud, registers it to the site you select, and initiates the provisioning handshake automatically. The entire sequence takes approximately **2 minutes**.
+
+    During provisioning, the app will:
+    - Detect the connected asset's OEM and protocol
+    - Auto-configure polling parameters for that asset type
+    - Assign the device a unique cryptographic identity for secure MQTT communication
+    - Confirm that telemetry is flowing to your TerawattOS account
+
+    <Tip>
+      The 7-step commissioning wizard in the mobile app guides you through every decision — protocol selection, site assignment, alert thresholds, and data verification. No specialist knowledge is required. Average install time across all site types is **40–90 minutes per site**, depending on inverter count.
+    </Tip>
+  </Step>
+
+  <Step title="Verify Live Data in TerawattOS">
+    Within 2–5 minutes of provisioning, your site appears in the TerawattOS portfolio dashboard with a green **Live** status badge. Open the site view to confirm that the following are populating correctly:
+
+    - Real-time power output (kW)
+    - AC voltage and current per phase
+    - Inverter operating state
+    - Any active fault codes
+
+    The TerawattEDGE streams telemetry every **1–5 seconds** over 4G LTE or WiFi. If both radios are available, the device selects the lowest-latency connection automatically. If connectivity is temporarily unavailable at the moment of provisioning, the device buffers data locally and syncs as soon as a connection is established.
+  </Step>
+</Steps>
+
+## Offline Commissioning
+
+The TerawattOS mobile app is fully functional without an internet connection at the site. You can configure new TerawattEDGE devices, assign them to sites, and set polling parameters entirely offline. The app stores the configuration locally and syncs everything — including any telemetry buffered on the device — as soon as you return to connectivity.
+
+This is particularly valuable for remote or off-grid sites where mobile data coverage is unreliable during the installation visit.
+
+## Firmware Updates
+
+TerawattEDGE firmware is maintained and updated by Terawattos. Updates are delivered **over-the-air (OTA)** automatically — the device checks for new firmware during each maintenance window and applies updates without any manual intervention. You will see a notification in the TerawattOS web portal when a firmware update has been applied to a device on your account.
+
+You do not need to be on site, and no downtime is required. The device continues polling and buffering telemetry during the update process.
+
+## LED Status Reference
+
+The LED indicator on the TerawattEDGE device provides a quick visual status read at a glance. Use this as your first diagnostic when verifying an installation or troubleshooting a reported issue.
+
+| LED State | Meaning |
+|---|---|
+| 🟢 Solid Green | Device is live, connected, and streaming telemetry to TerawattOS |
+| 🟡 Solid Amber | Device is buffering — polling assets but offline from TerawattOS cloud |
+| 🔴 Solid Red | Configuration error — check asset connection, protocol settings, or re-provision via the mobile app |
+| 🔵 Flashing Blue | Device is in provisioning mode — awaiting QR code scan and site assignment |
+| ⚪ No Light | Device is not powered — check power supply and connections |
+
+## Troubleshooting Common Issues
+
+<Accordion title="The device shows Red after provisioning">
+  A red LED after provisioning typically indicates a protocol mismatch between TerawattEDGE and the connected asset. Open the TerawattOS mobile app, navigate to the device, and tap **Re-run Protocol Detection**. If the issue persists, manually select the asset's protocol from the supported list and confirm the RS-485 cable polarity matches the A+/B− labelling on the device.
+</Accordion>
+
+<Accordion title="The site does not appear in the portfolio dashboard">
+  Check that the provisioning step completed successfully — the mobile app should have shown a confirmation screen with a device ID. If provisioning was interrupted, re-scan the QR code and repeat the provisioning flow. Devices that were provisioned offline will appear in the dashboard within 5 minutes of the mobile app regaining connectivity.
+</Accordion>
+
+<Accordion title="Telemetry is showing stale or zero values">
+  Zero-value telemetry usually means the asset is offline, the RS-485 cable is disconnected, or the asset's communications port is in use by another device (such as a legacy data logger). Confirm that no other device is connected to the same RS-485 bus. If the asset supports multiple simultaneous Modbus clients, consult the inverter manual to enable multi-master mode.
+</Accordion>
+
+<Accordion title="The mobile app cannot find the device after scanning the QR code">
+  Confirm that the TerawattEDGE device is powered on (LED should be flashing blue in provisioning mode). If the LED is off, check the power supply. If the LED is solid amber or green, the device may already be provisioned to another account — contact Terawattos support with the device serial number printed below the QR code.
+</Accordion>

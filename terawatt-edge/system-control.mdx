@@ -1,0 +1,113 @@
+---
+title: "Remote System Control via TerawattEDGE"
+sidebarTitle: "System Control"
+description: "Send control commands to connected energy assets through TerawattOS — dispatch batteries, switch inverter modes, and manage setpoints without a site visit."
+---
+
+TerawattEDGE is not a passive data collector. The same channel that streams live telemetry from your assets also carries control commands in the other direction — letting operators issue instructions to connected hardware directly through TerawattOS, from anywhere, at any time. A battery dispatch adjustment that previously required a site visit or a call to a local technician now takes seconds from a laptop or phone.
+
+## What You Can Control
+
+<CardGroup cols={2}>
+  <Card title="Battery Dispatch" icon="battery-full">
+    Set charge and discharge schedules, configure peak-shaving thresholds, and override active dispatch modes for storage systems — all in real time from the TerawattOS interface.
+  </Card>
+  <Card title="Inverter Mode Switching" icon="sliders">
+    Toggle inverters between grid-tied, island, and curtailed operating modes. Activate emergency shutdowns or initiate restart sequences for any connected inverter without a technician on site.
+  </Card>
+  <Card title="Custom Setpoints" icon="dial">
+    Adjust output setpoints, voltage limits, frequency thresholds, and other configurable parameters. Define automated dispatch logic for rule-based execution without manual intervention each cycle.
+  </Card>
+  <Card title="Remote Diagnostics" icon="stethoscope">
+    Use live telemetry to inspect asset state before deciding whether to dispatch a technician. Resolve a significant portion of alerts remotely — without rolling a truck.
+  </Card>
+</CardGroup>
+
+## Battery Dispatch Management
+
+For sites with battery energy storage systems (BESS), TerawattEDGE enables full remote dispatch management through TerawattOS. You can:
+
+- **Define charge/discharge schedules** based on time-of-use (ToU) tariff windows — charging during off-peak periods and discharging during peak pricing hours
+- **Set peak-shaving thresholds** to cap grid import at a defined kW level, triggering automatic battery discharge when the threshold is approached
+- **Override active dispatch modes** in real time — for example, switching a battery from scheduled dispatch to manual control during a grid event or emergency
+- **Monitor SoC in real time** and adjust dispatch parameters on the fly to protect battery health and avoid deep discharge events
+
+All dispatch commands are executed within milliseconds of confirmation. The TerawattEDGE device receives the instruction, validates it against the asset's current operating state, and writes the new parameters to the BMS interface using the appropriate protocol.
+
+## Operational Mode Switching
+
+TerawattEDGE gives you full operational control over inverter modes without a physical visit to the site. Supported mode transitions include:
+
+<Tabs>
+  <Tab title="Grid-Tied to Island Mode">
+    Switch inverters from grid-connected operation to islanded microgrid mode — useful when intentional islanding is required during a grid disturbance or maintenance window. TerawattOS confirms the mode transition is successful before closing the command dialog.
+  </Tab>
+  <Tab title="Curtailment">
+    Apply output curtailment limits to individual inverters or all inverters at a site — for example, to comply with grid operator instructions or to manage export limits under a power purchase agreement (PPA). Set the curtailment level as a percentage of rated capacity or an absolute kW cap.
+  </Tab>
+  <Tab title="Emergency Shutdown">
+    Issue an immediate shutdown command to one or more inverters. The device executes the shutdown within the asset's defined safe ramp-down time. TerawattOS logs the command, the operator who issued it, and the timestamp — creating an automatic incident record.
+  </Tab>
+  <Tab title="Restart Sequence">
+    Remotely restart an inverter that has tripped on a recoverable fault. TerawattEDGE issues the manufacturer-defined restart command, polls the inverter's status register, and confirms in the TerawattOS interface whether the restart succeeded or whether the fault is persistent.
+  </Tab>
+</Tabs>
+
+## Custom Setpoints and Automated Dispatch Logic
+
+Beyond scheduled commands, TerawattOS supports **rule-based automated dispatch** that runs continuously without manual input. Define a rule — for example, "discharge battery to 20% SoC any time grid frequency drops below 49.8 Hz" — and TerawattEDGE executes it automatically whenever the condition is met, based on the live telemetry it is already collecting.
+
+You can configure:
+
+- **Output setpoints**: Set maximum or minimum power output levels for inverters operating under grid codes or contractual constraints
+- **Voltage and frequency ride-through thresholds**: Customise the conditions under which an inverter stays connected or disconnects during grid disturbances
+- **Automated dispatch schedules**: Define repeating charge/discharge cycles with start time, duration, target SoC, and power rate — applied daily, weekly, or on custom calendar rules
+
+All automated rules are visible in TerawattOS, with a live log showing every time a rule fires and what command was executed.
+
+## Safe Command Execution
+
+Every control command passes through a validation layer in TerawattEDGE before it reaches the asset. This protects hardware from operator error and out-of-specification instructions.
+
+<Accordion title="Operating Limits Validation">
+  Before executing any command, TerawattEDGE checks the instruction against the asset's configured operating limits — maximum/minimum voltage, current, power, and temperature ranges stored during provisioning. Commands that would drive the asset outside its safe operating envelope are **rejected at the edge** before they reach the hardware. The rejection is logged and surfaced as an alert in TerawattOS.
+</Accordion>
+
+<Accordion title="Pre-Command State Check">
+  For mode-switching commands, TerawattEDGE verifies the asset's current state before executing the transition. If the asset is in a fault state or the transition is not valid from its current operating mode, the command is held and the operator is notified to resolve the underlying condition first.
+</Accordion>
+
+<Accordion title="Confirmation Screen">
+  All control commands in TerawattOS require explicit confirmation before dispatch. The confirmation screen shows a plain-language summary: the asset affected, the current parameter value, the new parameter value, and the expected outcome. This gives operators one final review before the command is sent.
+</Accordion>
+
+<Warning>
+  Control commands are executed **immediately** upon confirmation. Review the command summary screen carefully before confirming — particularly for emergency shutdown commands, mode-switching instructions, and any command affecting multiple assets simultaneously. Accidental shutdowns at live sites may affect grid stability obligations or PPA compliance.
+</Warning>
+
+## Command Audit Trail
+
+Every control action executed through TerawattEDGE is permanently logged in TerawattOS. The audit trail records:
+
+- **Who** issued the command (user account and role)
+- **When** the command was issued (UTC timestamp)
+- **What** the parameter was before the command
+- **What** the parameter was set to
+- **Whether** the command succeeded, was rejected, or timed out
+- **Which** asset and site was affected
+
+The audit trail is exportable as a CSV or PDF report from the TerawattOS portal and is searchable by date range, user, asset, and command type.
+
+<Tip>
+  The command audit trail is valuable evidence beyond internal operations. Use it to support **warranty claims** (proving the asset was operated within manufacturer specifications), **regulatory compliance** submissions, and **incident post-mortems** when investigating an unexpected shutdown or dispatch event.
+</Tip>
+
+## Remote Diagnostics Before Dispatch
+
+Before sending a field technician to investigate an alert, use TerawattEDGE's live telemetry to pre-screen the fault remotely. In many cases, the data tells you everything you need to know:
+
+- Is the fault code a known transient that clears on restart — or a persistent hardware fault?
+- Is the asset's output power consistent with available irradiance — or is underperformance real?
+- Are other assets at the same site affected, suggesting a grid or balance-of-plant issue?
+
+Remote diagnostics through TerawattOS results in significantly fewer unnecessary truck rolls. When a technician does need to go to site, the diagnostic context gathered remotely means they arrive with the right parts and a clear understanding of the fault — reducing mean time to repair.

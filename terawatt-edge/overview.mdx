@@ -1,0 +1,101 @@
+---
+title: "TerawattEDGE: Live Telemetry from Any Energy Asset"
+sidebarTitle: "Overview"
+description: "TerawattEDGE is the IoT dongle that connects solar inverters, batteries, and meters to TerawattOS — streaming live telemetry with sub-second latency."
+---
+
+TerawattEDGE is a compact IoT dongle that bridges your physical energy hardware and the TerawattOS cloud platform. Plug it into any supported asset — a solar inverter, battery storage cabinet, smart meter, or hybrid generator — and within minutes you have a fully observable, remotely controllable asset streaming live data to your portfolio dashboard. No specialist integrator, no bespoke SCADA configuration, no third-party middleware.
+
+## Key Specifications
+
+<CardGroup cols={2}>
+  <Card title="Sub-Second Telemetry" icon="bolt">
+    Data streams from asset to TerawattOS with less than 1 second of latency — giving operators a true real-time view of every connected site.
+  </Card>
+  <Card title="10+ OEM Protocols" icon="plug">
+    Speaks Modbus RTU/TCP, SunSpec, DNP3, IEC 61850, OCPP, and proprietary OEM formats out of the box — no custom firmware required.
+  </Card>
+  <Card title="Dual Connectivity" icon="wifi">
+    Ships with both 4G LTE and WiFi radios. Automatically fails over between them so telemetry keeps flowing even when one link degrades.
+  </Card>
+  <Card title="Under 5 Minutes to Live Data" icon="timer">
+    Scan the QR code in the TerawattOS mobile app, confirm the site assignment, and the device begins streaming. Average provisioning time is under 2 minutes.
+  </Card>
+  <Card title="30-Day Offline Buffer" icon="database">
+    Telemetry is written to onboard storage first. If connectivity drops, up to 30 days of data is preserved locally and synced in full when the link returns.
+  </Card>
+  <Card title="DIN-Rail Ready" icon="server">
+    Standard DIN-rail form factor fits directly into electrical panels and distribution boards — no custom mounting hardware needed.
+  </Card>
+</CardGroup>
+
+## Core Capabilities
+
+TerawattEDGE does two things exceptionally well: it streams live telemetry, and it executes control commands. Together, these capabilities turn passive hardware into an actively managed asset.
+
+<Tabs>
+  <Tab title="Live Telemetry">
+    TerawattEDGE polls your connected assets every second — capturing AC/DC voltage, current, output power, state of charge, temperature, fault codes, and any custom Modbus registers you configure. Every reading is timestamped at the edge, normalized to TerawattOS's common data schema, and transmitted over MQTT with TLS 1.3 encryption. The result is a continuous, gap-free data stream that powers real-time dashboards, anomaly detection, and automated alerts in TerawattOS — with no manual data collection or CSV uploads.
+  </Tab>
+  <Tab title="System Control">
+    TerawattEDGE is a two-way channel. Operators can issue control commands through TerawattOS — adjusting battery dispatch schedules, switching inverter operating modes, setting output curtailment levels, or triggering emergency shutdowns — and those commands are executed at the asset within milliseconds. Every command is validated against the asset's operating limits before execution, and a full audit trail records who issued it, when, and what changed. No site visit required.
+  </Tab>
+</Tabs>
+
+## Where TerawattEDGE Deploys
+
+TerawattEDGE is designed to work across the full range of distributed energy environments — from rooftop installations to utility-scale fields.
+
+<Accordion title="Rooftop Solar (Commercial & Industrial)">
+  Mount directly inside the electrical room on a DIN rail. Connect to the inverter's RS-485 communications port. The device streams generation data, fault codes, and grid export/import metrics to TerawattOS in real time — eliminating the need for a dedicated data logger.
+</Accordion>
+
+<Accordion title="Utility-Scale Solar Farms">
+  Deploy one TerawattEDGE per inverter string or combiner box. TerawattOS aggregates readings across all devices into a unified site view, enabling string-level fault detection and performance benchmarking across the entire array.
+</Accordion>
+
+<Accordion title="Battery Energy Storage Systems (BESS)">
+  Connect to battery management system (BMS) interfaces via Modbus TCP or CAN bus adapters. TerawattEDGE captures state of charge, cell temperatures, charge/discharge cycles, and fault registers — and relays dispatch commands from TerawattOS to execute peak-shaving and time-of-use optimization schedules.
+</Accordion>
+
+<Accordion title="Off-Grid Mini-Grids">
+  Designed for intermittent connectivity environments. The 30-day offline buffer ensures no telemetry is lost during network outages — critical for rural and remote sites where 4G coverage is unreliable. Data syncs automatically when connectivity returns.
+</Accordion>
+
+<Accordion title="C&I Electrical Rooms">
+  Standard DIN-rail mounting fits directly into standard distribution boards. Supports multi-asset monitoring within a single facility — inverters, meters, EV chargers, and CHP units can all be connected through a single TerawattEDGE device or a small cluster of devices managed as one logical site.
+</Accordion>
+
+<Accordion title="Telecom Towers & Critical Facilities">
+  Used at hospitals, data centers, and telecom tower sites where uptime visibility is non-negotiable. TerawattEDGE's dual-radio failover and local buffering ensure continuous monitoring even when primary network links fail.
+</Accordion>
+
+## Security Architecture
+
+All telemetry transmitted by TerawattEDGE is encrypted in transit using **MQTT over TLS 1.3**. Each device is provisioned with a unique cryptographic identity during manufacturing — enabling mutual authentication between the device and the TerawattOS cloud. No unprotected data ever leaves the device, and rogue devices cannot impersonate a legitimate TerawattEDGE on your account.
+
+## TerawattEDGE and TerawattOS Together
+
+TerawattEDGE and TerawattOS are designed as a system, not separate products. The full workflow is automatic:
+
+<Steps>
+  <Step title="Edge Polls the Asset">
+    TerawattEDGE reads data from connected hardware every 1–5 seconds using the appropriate protocol for each OEM.
+  </Step>
+  <Step title="TerawattOS Ingests and Normalizes">
+    The platform receives the raw telemetry stream, normalizes it to a common schema, and stores it with full timestamp fidelity.
+  </Step>
+  <Step title="Anomaly Detection Runs Continuously">
+    TerawattOS compares incoming readings against expected performance baselines. Deviations trigger automated alerts — no analyst intervention needed.
+  </Step>
+  <Step title="Work Orders Are Dispatched Automatically">
+    When a fault is confirmed, TerawattOS creates a work order, assigns it to the right field technician, and surfaces the diagnostic context so they arrive prepared.
+  </Step>
+  <Step title="Reports Generate From Live Data">
+    Investor reports, ESG disclosures, and performance summaries are auto-generated directly from the telemetry stream — no manual data wrangling.
+  </Step>
+</Steps>
+
+<Note>
+  TerawattEDGE is available in pilot kits, volume pricing, and OEM bundles. Whether you're instrumenting a single rooftop or rolling out across a 500-site portfolio, there's a commercial model to match. Most customers are live and streaming data in under a week from order.
+</Note>

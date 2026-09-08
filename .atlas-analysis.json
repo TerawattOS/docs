@@ -1,32 +1,11 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
-  "name": "Terawattos",
+  "projectType": "saas",
+  "projectName": "Terawattos",
+  "projectDescription": "Terawattos is an integrated renewable energy operations platform combining TerawattOS (cloud command layer) and TerawattEDGE (IoT hardware) to give operators real-time monitoring, automated diagnostics, and portfolio-scale control over distributed energy assets.",
   "theme": "almond",
-  "logo": {
-    "light": "https://media.brand.dev/f1cccc58-64a0-442b-80f8-b0817680ed86.svg",
-    "dark": "https://media.brand.dev/f1cccc58-64a0-442b-80f8-b0817680ed86.svg"
-  },
-  "favicon": "/favicon.png",
-  "colors": {
-    "primary": "#ff8933",
-    "light": "#fcfcfc",
-    "dark": "#f8ab7a"
-  },
-  "font": {
-    "headings": {
-      "family": "IBM Plex Sans"
-    },
-    "body": {
-      "family": "IBM Plex Sans"
-    }
-  },
-  "navbar": {
-    "primary": {
-      "type": "button",
-      "label": "Request a Demo",
-      "href": "https://terawattos.com/request-demo"
-    }
-  },
+  "primaryColor": "#ff8933",
+  "lightColor": "#fcfcfc",
+  "darkColor": "#f8ab7a",
   "navigation": {
     "tabs": [
       {
@@ -102,5 +81,31 @@
         ]
       }
     ]
-  }
+  },
+  "keyFeatures": [
+    "Real-time portfolio-wide asset monitoring dashboard",
+    "Multi-OEM integration via vendor-agnostic edge gateway",
+    "Automated fault detection and AI-powered diagnostics",
+    "Work order management with mobile field app",
+    "TerawattEDGE IoT dongle with sub-second telemetry and offline buffering",
+    "Battery dispatch optimization and remote system control",
+    "Automated investor and ESG reporting",
+    "REST API and webhooks for EMS/SCADA integration",
+    "Support for Modbus RTU/TCP, SunSpec, DNP3, IEC 61850, and OCPP protocols",
+    "Scalable to 10,000+ concurrent distributed assets"
+  ],
+  "publicApiSurface": [
+    "REST API for telemetry data ingestion and retrieval",
+    "Webhooks for EMS/SCADA integration",
+    "TerawattEDGE provisioning via QR code and mobile app",
+    "Modbus RTU/TCP protocol support",
+    "SunSpec protocol support",
+    "DNP3 protocol support",
+    "IEC 61850 protocol support",
+    "OCPP protocol support",
+    "Battery dispatch schedule configuration",
+    "Alert threshold configuration",
+    "Role-based access control (RBAC)",
+    "Automated report generation (PDF and live web)"
+  ]
 }

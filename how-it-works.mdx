@@ -1,0 +1,111 @@
+---
+title: "How Terawattos Connects Field Hardware to Cloud Intelligence"
+sidebarTitle: "How It Works"
+description: "Follow the sensor-to-action loop: how TerawattEDGE captures raw asset data and TerawattOS turns it into decisions and dispatched work orders."
+---
+
+Terawattos is built around a continuous sensor-to-action loop. Raw electrical data is collected at the asset, streamed to the cloud in real time, processed into actionable intelligence, and fed back to your operations team as alerts, work orders, and reports — all within seconds. This page explains each stage of that loop and how the two products work together to close it.
+
+## The Sensor-to-Action Loop
+
+```
+Physical Asset → TerawattEDGE → TerawattOS Cloud → Operator Action
+     ↑                                                      ↓
+     └──────────── Remote commands & dispatch ──────────────┘
+```
+
+The loop is bidirectional. TerawattEDGE does not just read data — it also relays remote commands from TerawattOS back to controllable assets such as battery systems and smart inverters, enabling automated dispatch without an on-site operator.
+
+<Steps>
+  <Step title="Connect to any asset">
+    TerawattEDGE dongles attach directly to the communications port of any energy asset — solar inverters, battery energy storage systems (BESS), revenue-grade meters, EV chargers, CHP units, and hybrid sites. A single RS-485 or RJ-45 cable is all the physical connection required.
+
+    Once powered, the dongle auto-discovers the asset by cycling through its library of **10+ supported protocols**:
+
+    - Modbus RTU / Modbus TCP
+    - SunSpec (IEEE 1547)
+    - DNP3
+    - IEC 61850
+    - OCPP (for EV chargers)
+    - Proprietary protocols: SolarEdge, SMA, Huawei FusionSolar, and others
+
+    Because TerawattEDGE abstracts protocol differences at the edge, TerawattOS receives a normalised data stream regardless of the asset's manufacturer — a SMA inverter looks identical to a Huawei inverter at the cloud layer.
+  </Step>
+
+  <Step title="Stream live telemetry">
+    Every second, TerawattEDGE reads key registers from the connected asset — AC and DC voltage, current, power, frequency, temperature, error codes, state-of-charge (for BESS), and dozens of model-specific parameters. That data is:
+
+    1. **Timestamped** at the edge with microsecond precision.
+    2. **Compressed and encrypted** using TLS 1.3.
+    3. **Published to TerawattOS** over MQTT via the device's dual 4G/WiFi uplink — whichever path has the stronger signal at that moment.
+
+    End-to-end latency from asset register to cloud database is **under 1 second** under normal network conditions.
+
+    <Note>
+      **Offline resilience:** If the site loses internet connectivity, TerawattEDGE continues collecting and storing telemetry locally for up to **30 days**. The moment connectivity is restored, the device replays all buffered data to TerawattOS in chronological order, ensuring your historical record has no gaps. The TerawattOS mobile app also operates fully offline, caching the last known state of every asset and queuing work-order updates for sync.
+    </Note>
+  </Step>
+
+  <Step title="Operate with intelligence">
+    TerawattOS ingests the normalised telemetry stream and applies multiple layers of processing before presenting data to operators:
+
+    <Accordion title="Real-time monitoring">
+      Every asset's live readings are displayed in the portfolio dashboard, refreshed every 1–5 seconds. Performance metrics — energy yield, performance ratio, capacity factor, specific yield — are calculated continuously and compared against baseline models to surface underperformance automatically.
+    </Accordion>
+
+    <Accordion title="AI diagnostics and health scoring">
+      The platform's diagnostic engine evaluates each asset's telemetry against fault signatures and degradation patterns. It assigns a **health score** (0–100) to every device and generates root-cause hypotheses for any anomaly. Probable causes — such as shading, soiling, clamp failure, or communication dropout — are surfaced in under 5 minutes of fault onset.
+    </Accordion>
+
+    <Accordion title="Alerting and escalation">
+      Alert rules evaluate incoming telemetry in real time. When a threshold is crossed, TerawattOS creates an alert event, classifies its severity, and triggers the configured notification chain (email, SMS, in-app push, webhook). Escalation rules automatically page the next contact tier if the first responder does not acknowledge within a defined window.
+    </Accordion>
+
+    <Accordion title="Automated reporting">
+      TerawattOS continuously aggregates telemetry into daily, monthly, and annual summaries. Investor reports — branded PDFs and live web dashboards — are generated automatically from this data. ESG and Scope 2 emissions reports are produced using the same pipeline, with no manual data entry required.
+    </Accordion>
+  </Step>
+
+  <Step title="Take action">
+    Intelligence only creates value when it drives action. TerawattOS closes the loop in three ways:
+
+    **Work orders** — When a fault is confirmed, the platform generates a structured work order pre-populated with the asset ID, fault description, AI-suggested corrective action, required parts, and site access instructions. Field technicians receive the work order on the mobile app, complete tasks offline if necessary, and sync status updates when back in range.
+
+    **Remote asset control** — For controllable assets (BESS, smart inverters, EV chargers), TerawattOS sends dispatch commands through TerawattEDGE. Battery charge/discharge schedules, peak-shaving setpoints, and Time-of-Use (ToU) optimisation profiles are all configurable from the cloud with no on-site intervention.
+
+    **EMS/SCADA integration** — Processed data and control commands are also available externally via REST API and webhooks, enabling TerawattOS to act as a data source or control endpoint within your existing Energy Management System or SCADA infrastructure.
+  </Step>
+</Steps>
+
+## TerawattOS vs. OEM Dashboards
+
+Most energy assets ship with a vendor-provided monitoring portal. Those portals are useful for commissioning a single device, but they break down the moment you operate a multi-vendor or multi-site portfolio.
+
+| Capability | OEM Dashboard | TerawattOS |
+|---|---|---|
+| **Asset coverage** | Device-specific | Portfolio-wide |
+| **Vendor support** | Single OEM only | Multi-OEM, vendor-agnostic |
+| **Analytics depth** | Basic performance charts | Advanced diagnostics, health scores, yield modelling |
+| **Maintenance model** | Reactive — alerts after failure | Proactive — anomaly detection before failure |
+| **Reporting** | Manual data exports | Automated investor & ESG reports |
+| **Remote control** | Limited or none | Battery dispatch, inverter setpoints, EV charging schedules |
+| **Scale** | Tens of devices | 10,000+ concurrent sites |
+| **API / integration** | Proprietary or none | REST API, webhooks, SCADA/EMS-ready |
+| **Offline resilience** | None | 30-day local buffer + offline mobile app |
+
+## Architecture Summary
+
+<CardGroup cols={2}>
+  <Card title="Edge Layer (TerawattEDGE)" icon="microchip">
+    Rugged IoT dongle. Sits on-site, reads asset registers every second, buffers data locally, and maintains a persistent encrypted tunnel to TerawattOS over 4G or WiFi.
+  </Card>
+  <Card title="Cloud Layer (TerawattOS)" icon="cloud">
+    Multi-tenant SaaS platform. Ingests telemetry at scale, runs diagnostics and analytics, manages work orders and alerts, and exposes data via REST API and webhooks.
+  </Card>
+  <Card title="Mobile App" icon="mobile">
+    iOS and Android. Used by field technicians for QR-code provisioning, work-order management, and live asset inspection — with full offline capability.
+  </Card>
+  <Card title="Integrations" icon="plug">
+    Connects to external EMS, SCADA, and CMMS platforms via REST API and webhooks. Supports DNP3 and IEC 61850 for utility-grade integration.
+  </Card>
+</CardGroup>

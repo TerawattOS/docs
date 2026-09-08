@@ -1,0 +1,141 @@
+---
+title: "Troubleshooting Common Terawattos Issues"
+sidebarTitle: "Troubleshooting"
+description: "Step-by-step guidance for diagnosing and resolving common issues with TerawattEDGE connectivity, telemetry gaps, dashboard alerts, and the mobile app."
+---
+
+This guide covers the most common issues operators and field technicians encounter with TerawattEDGE connectivity, telemetry data quality, dashboard and alert behavior, and the Terawattos mobile app — with clear diagnostic steps and resolutions for each.
+
+## TerawattEDGE Connectivity Issues
+
+<Accordion title="Device shows amber LED / appears offline in dashboard">
+  An amber LED indicates that TerawattEDGE is running and collecting data, but is currently buffering telemetry locally rather than streaming to the cloud. The device has not lost data — it is storing up to 30 days of readings on-device.
+
+  Work through these checks in order:
+
+  1. **SIM card** — confirm the SIM card is fully seated in the slot. Remove and re-seat if uncertain.
+  2. **4G signal strength** — check signal strength from **Devices → [device ID] → Signal**. If signal is marginal (below 2 bars), configure WiFi as the primary connection instead: go to **Devices → [device ID] → Connectivity → Set WiFi Primary**.
+  3. **Antenna connections** — confirm both antenna connectors (cellular and GPS/WiFi where applicable) are screwed finger-tight and not damaged.
+
+  Once connectivity is restored, TerawattEDGE resumes live streaming and automatically backfills all buffered data to TerawattOS in chronological order. No manual sync is required.
+</Accordion>
+
+<Accordion title="Device shows red LED">
+  A red LED indicates a configuration error — the device is running but cannot communicate with the connected asset. No telemetry is being collected.
+
+  **To diagnose:**
+
+  1. Open the Terawattos mobile app and navigate to **Devices → [device ID] → Run Diagnostics**.
+  2. The diagnostic report will identify the specific configuration fault.
+
+  **Common causes:**
+
+  - **Incorrect Modbus address** — the address configured in TerawattOS does not match the address set on the asset's local display or DIP switches.
+  - **Wrong baud rate** — the baud rate for the RS-485 communication port must match the asset's configured baud rate (typically 9600 or 19200).
+  - **Incompatible protocol setting** — the protocol selected in the Edge configuration (e.g., Modbus RTU vs. SunSpec) does not match what the asset supports.
+
+  If the diagnostic report does not resolve the issue, re-run the commissioning wizard from **Devices → [device ID] → Recommission** to reset the device configuration from scratch.
+</Accordion>
+
+<Accordion title="Site not appearing in portfolio dashboard after QR scan">
+  After scanning a TerawattEDGE QR code with the mobile app, the site provisioning process typically completes within 2–5 minutes. If the site has not appeared in your portfolio dashboard after 10 minutes, work through the following checks:
+
+  1. **Correct account** — confirm the QR code was scanned while logged into the correct TerawattOS account. If you manage multiple organizations, verify you are in the right workspace.
+  2. **Device LED status** — a green LED confirms the device is online and provisioned. An amber or red LED indicates connectivity or configuration issues — see the relevant sections above.
+  3. **RS-485 cable seating** — confirm the RS-485 cable is inserted into the correct communication port on the asset (not the monitoring port, if the asset has both). Consult your asset's wiring diagram if unsure.
+
+  If the site still does not appear after resolving the above, contact Terawattos support with your device ID.
+</Accordion>
+
+## Telemetry Data Issues
+
+<Accordion title="Telemetry shows flat lines or gaps in history">
+  Flat lines in historical telemetry charts most commonly reflect a period when the TerawattEDGE device was offline. Because the device buffers up to 30 days of data locally, the missing data will automatically backfill once the device reconnects — the historical chart will fill in the gap without any action on your part.
+
+  **If flat lines are appearing in live view despite a green LED:**
+
+  1. **RS-485 cable** — inspect the RS-485 cable connection at both ends (device and asset). A loose connection causes intermittent or zero readings.
+  2. **Modbus address** — verify the Modbus address in **Assets → [asset] → Configuration** matches the address configured on the asset itself.
+  3. **Polling interval** — check that the polling interval hasn't been set to an unusually long value (e.g., 5+ minutes). Navigate to **Devices → [device ID] → Polling Settings** to review and adjust.
+</Accordion>
+
+<Accordion title="Asset shows unexpected values (e.g., 0 kW generation during daylight hours)">
+  Unexpected zero or near-zero generation values during expected operating hours usually have one of two causes: an active fault on the asset, or a misconfigured parameter register.
+
+  **Step 1: Check for active fault codes**
+
+  Navigate to **Assets → [asset] → Faults** in TerawattOS. Active fault codes from the asset's own controller are surfaced here. Resolve any active faults on the asset before investigating further.
+
+  **Step 2: Verify the asset is physically generating**
+
+  Check the inverter or asset's local display to confirm it is actually producing output. If the local display shows generation but TerawattOS shows zero, the issue is in the data mapping.
+
+  **Step 3: Verify the parameter register mapping**
+
+  Navigate to **Assets → [asset] → Configuration → Register Map** and confirm that the correct register address is mapped to the AC power parameter for your specific asset model. Refer to your asset's Modbus register table (available from the manufacturer) to verify the correct register.
+</Accordion>
+
+<Accordion title="Missing parameters or parameters showing N/A">
+  Some parameters are asset-type-specific and are only available on certain hardware. For example:
+
+  - **State of charge (SoC)** is only available on BESS assets
+  - **Wind speed** is only available on wind turbine assets
+  - **Grid import/export** requires a connected meter asset, not just an inverter
+
+  **To check your asset type configuration:**
+
+  Navigate to **TerawattOS → Assets → [asset] → Configuration** and confirm the asset type is set correctly. An incorrectly typed asset (e.g., a BESS registered as a solar inverter) will suppress parameters specific to that asset type.
+
+  If the asset type is correct and the parameter still shows N/A, contact Terawattos support — the parameter may require a firmware update or a custom register mapping for your specific asset model.
+</Accordion>
+
+## Dashboard and Alerts
+
+<Accordion title="Receiving too many alerts / alert noise">
+  High alert volume is usually caused by thresholds that are too sensitive for the variability of your assets, or by receiving individual notifications for each alert instance across a large fleet. Use the following settings to reduce noise without missing genuine issues:
+
+  1. **Smart deduplication** — enable deduplication in **Alerts → Settings → Deduplication**. This groups repeated alerts for the same condition on the same asset into a single notification until the condition clears.
+  2. **Group alerts by asset or site** — in **Alerts → Settings → Notification Grouping**, switch from per-alert notifications to per-asset or per-site digests.
+  3. **Adjust thresholds** — review alert thresholds for your highest-volume rules in **Alerts → Rules**. Widen the threshold band to reduce sensitivity for non-critical parameters.
+  4. **Set quiet hours** — configure quiet hours for low-priority alert categories in **Alerts → Settings → Quiet Hours** to suppress non-urgent notifications outside business hours.
+</Accordion>
+
+<Accordion title="Work order not appearing for a technician">
+  If a technician reports that a work order is not visible in their mobile app, check both of the following:
+
+  1. **User role** — navigate to **Settings → Team → [technician name]** and confirm their role is set to **Technician** or **Operator**. Users with the **Viewer** role cannot see or action work orders.
+  2. **Work order assignment** — open the work order in **Work Orders → [work order]** and confirm it is assigned to that specific user. Unassigned work orders are visible to Operators but do not appear in a Technician's personal queue. Assign the work order and ask the technician to refresh their app.
+</Accordion>
+
+<Accordion title="Reports showing data gaps">
+  Data gaps in generated reports — whether PDF investor reports or live web reports — reflect actual periods when the TerawattEDGE device was offline or the asset was not generating. Terawattos shows gaps explicitly rather than interpolating or estimating values, to ensure your reports accurately represent real operational history.
+
+  **If gaps are unexpected:**
+
+  1. Navigate to **Devices → [device] → Connectivity Log** and review the connectivity history for the affected period.
+  2. Cross-reference the gap window with any known site events (power outages, maintenance windows, SIM issues).
+  3. If the device was online during the gap period (no connectivity interruptions logged), contact Terawattos support — there may be a data ingestion issue on the platform side.
+
+  <Note>
+    Buffered data backfills automatically when a device reconnects. If a report was generated during a connectivity gap and shows missing data, regenerate the report after the device has reconnected and synced to capture the recovered telemetry.
+  </Note>
+</Accordion>
+
+## Getting Help
+
+If the steps in this guide haven't resolved your issue, contact the Terawattos support team directly. To help them respond quickly, include the following in your message:
+
+- **Site name** as it appears in your TerawattOS portfolio dashboard
+- **Device ID** — printed on the label on the TerawattEDGE hardware
+- **LED status** at the time you observed the issue (green, amber, or red)
+- **Screenshot** of any error messages shown in the TerawattOS dashboard or mobile app
+
+<CardGroup cols={1}>
+  <Card
+    title="Contact Terawatt Support"
+    icon="headset"
+    href="https://terawattos.com/contact-sales"
+  >
+    Reach out to the Terawattos support team with your device ID, site name, and a description of the issue for the fastest resolution.
+  </Card>
+</CardGroup>

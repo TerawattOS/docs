@@ -1,0 +1,125 @@
+---
+title: "Alert Configuration and Incident Management in TerawattOS"
+sidebarTitle: "Alerts"
+description: "Configure rules-based and ML-driven alerts across your fleet, route incidents to the right teams, and manage the full lifecycle from trigger to close."
+---
+
+TerawattOS alerts give your operations team continuous visibility into fault conditions, performance deviations, and availability issues across your entire fleet — without drowning in notification noise. The alerting system combines rules-based threshold monitoring with ML-driven anomaly detection to surface real issues quickly, route them to the right people, and track them through to resolution with a full audit history.
+
+## Alert Types
+
+TerawattOS supports four categories of alerts, covering the full range of operational conditions you need to monitor:
+
+<CardGroup cols={2}>
+  <Card title="Fault Alerts" icon="triangle-exclamation">
+    Triggered by device-level fault codes from connected assets — inverter faults, battery management system errors, communication failures, protection relay trips, and other hardware events. Fault codes are normalized across OEMs so alerts use consistent language regardless of manufacturer.
+  </Card>
+  <Card title="Performance Alerts" icon="chart-line-down">
+    Triggered when actual generation falls below a configurable percentage of expected output for a sustained period. Uses the weather-adjusted baseline to avoid false positives from overcast conditions — only flags genuine underperformance relative to current irradiance.
+  </Card>
+  <Card title="Availability Alerts" icon="circle-xmark">
+    Triggered when a site or asset becomes unavailable — zero-generation events during daylight hours, communication loss exceeding a defined duration, or availability dropping below your contracted minimum threshold.
+  </Card>
+  <Card title="Custom Threshold Alerts" icon="sliders">
+    Define your own numeric threshold alerts on any telemetry parameter — AC voltage, DC string current, battery temperature, export power, frequency deviation, or any custom sensor value streamed via TerawattEDGE. Set upper and lower bounds per asset type, site, or portfolio-wide.
+  </Card>
+</CardGroup>
+
+## Configuring Alert Thresholds
+
+You configure alert thresholds at three levels of granularity, giving you flexibility to apply portfolio-wide defaults while overriding them for specific sites or asset types:
+
+<Tabs>
+  <Tab title="Portfolio-Wide">
+    Set default thresholds that apply to all sites and assets in your account. Portfolio-wide thresholds are the baseline — any site or asset without a more specific override inherits these values. Useful for standard performance and availability monitoring across a homogeneous fleet.
+  </Tab>
+  <Tab title="Site-Level">
+    Override portfolio defaults for a specific site. Use site-level thresholds when a particular location has known characteristics — a site with persistent afternoon shading, or a BESS site operating under a specific dispatch contract — that make the default threshold inappropriate.
+  </Tab>
+  <Tab title="Asset-Type Level">
+    Apply thresholds to all assets of a specific type or OEM model across the portfolio. For example, set tighter voltage bounds for a specific inverter model known to have sensitivity to grid fluctuations, without affecting the thresholds for other inverter types in the same fleet.
+  </Tab>
+</Tabs>
+
+<Tip>
+  During your first 30 days on TerawattOS, start with the platform default thresholds rather than customizing immediately. The defaults are calibrated against operational data from similar asset types and market conditions. After 30 days of telemetry, you will have enough site-specific data to tune thresholds accurately and reduce false positives.
+</Tip>
+
+## Notification Channels
+
+Configure how and where your team receives alert notifications. TerawattOS supports three notification channels, each configurable by alert type and severity:
+
+<Accordion title="Email">
+  Send alert notifications to one or more email addresses. You can configure separate recipient lists for different alert types — for example, routing fault alerts to your operations manager and performance alerts to your asset management team. Emails include the alert summary, affected asset, current telemetry readings, and a direct link to the incident in the dashboard.
+</Accordion>
+
+<Accordion title="SMS">
+  Send SMS notifications for high-severity alerts where immediate attention is required. Configure SMS for critical fault categories — zero-generation events, communication failures, or safety-related fault codes — without enabling SMS for lower-priority performance notifications that don't require an immediate response.
+</Accordion>
+
+<Accordion title="In-App Notifications">
+  All alerts appear in the TerawattOS notification center on web and mobile. In-app notifications are always active for all alert types, regardless of other channel configuration. Unacknowledged alerts are surfaced prominently in the dashboard header and in the mobile app notification tray.
+</Accordion>
+
+## Smart Deduplication
+
+A single underlying event — an inverter tripping offline, for example — can trigger dozens of individual telemetry anomalies across related parameters. Without deduplication, your team receives a flood of notifications for what is effectively one incident.
+
+TerawattOS smart deduplication groups related alerts into a single incident record. When an inverter trips:
+
+- The communication loss alert, the zero-generation alert, and any downstream string alerts are grouped under one incident
+- Your team receives one notification — not 50
+- The incident record shows all contributing alert signals in the detail view
+- Acknowledging or resolving the incident clears all grouped alerts simultaneously
+
+## Escalation Routing
+
+Define escalation chains so that unacknowledged alerts automatically reach the right level of your organization:
+
+<Steps>
+  <Step title="Initial Alert">
+    The alert is sent to the primary assignee — a specific technician, a team, or a role — via your configured notification channels.
+  </Step>
+  <Step title="First Escalation">
+    If the alert is not acknowledged within your defined window (e.g., 30 minutes), TerawattOS escalates to the next tier — typically a team lead or senior technician — and sends a new notification.
+  </Step>
+  <Step title="Second Escalation">
+    If still unacknowledged after a second window, the alert escalates to the operations manager or account owner. At this stage, SMS notification is triggered regardless of the individual's channel preferences.
+  </Step>
+  <Step title="Client Notification (Optional)">
+    For O&M service providers, configure a final escalation step that notifies the asset owner or client contact after a defined SLA window has elapsed without resolution. This keeps clients informed automatically without requiring your team to make a manual call.
+  </Step>
+</Steps>
+
+## Incident Management
+
+Every triggered alert creates an incident record in TerawattOS. You manage incidents through their full lifecycle from the dashboard or the mobile app:
+
+- **Acknowledge**: claim the incident to signal that a human has seen it and is responding. Acknowledgement timestamps are logged for SLA tracking.
+- **Assign**: route the incident to a specific technician or team, triggering a work order if one has not already been auto-generated.
+- **Comment**: add operational context, findings from initial review, or coordination notes that are visible to all team members on the incident.
+- **Escalate manually**: override the automatic escalation schedule and escalate immediately if the situation warrants.
+- **Close**: mark the incident as resolved once the underlying fault is corrected. Closing an incident requires a resolution note and, where linked to a work order, confirmation that the work order is closed.
+
+## SLA Alert Tracking
+
+Alerts and incidents are linked to the SLA contracts you define for each client or site. TerawattOS tracks:
+
+- **Time to acknowledge**: measured from alert trigger to first acknowledgement
+- **Time to resolve**: measured from alert trigger to incident close
+- **SLA breach status**: each incident is marked as within SLA, at risk, or breached, based on the contract parameters for that site
+
+SLA performance data rolls up automatically into your [performance reports](/terawattos/performance-reporting), giving clients a verifiable record of your response and resolution performance for the reporting period.
+
+## Alert History and Audit Log
+
+Every alert, acknowledgement, escalation, assignment, comment, and resolution action is logged with a precise timestamp. The alert history is:
+
+- Searchable by site, asset, alert type, severity, date range, and assignee
+- Exportable for inclusion in SLA reports, client reviews, and compliance audits
+- Retained in full for the lifetime of your TerawattOS account — nothing is auto-deleted
+- Linked to the corresponding work order record where one was generated, so the operational record is complete from detection through resolution
+
+<Warning>
+  Closing an incident without a resolution note is not permitted when the incident is linked to an open work order. Ensure the work order is closed first, then close the incident — this maintains the integrity of your SLA and audit records.
+</Warning>
